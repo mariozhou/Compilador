@@ -1,0 +1,38 @@
+mi_casa.Initialize(Home{
+
+IsMove();
+Whistle();
+
+On();
+Micro.GetTemp();
+Micro.GetTemp();
+Micro.SaveFace();
+
+Camera.IsOn();
+
+#---funcion que da errores
+#CamaraOff();
+#MicroOn();
+#MicroOff();
+#Move("fg");
+
+#CamaraOn();
+#IsCamaraOn();
+
+Capture();
+IsSound();
+Avanzar();
+Retroceder();
+Detener();
+	GetTemp();
+	RecordTime(3);
+IsMove();
+  IsMove();
+
+
+	sad = 4 +8;
+	
+ 	IsMove();
+		GetTemp();
+
+});
