@@ -2169,7 +2169,8 @@ public class Main extends javax.swing.JFrame{
             Reader lector = new BufferedReader(new FileReader("archivo.txt"));
             Lexer lexer = new Lexer(lector);
             String resultado = txt;           
-            lexer.yyreset(lector);                                      
+            lexer.yyreset(lector);   
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -478,7 +478,7 @@ IF_FUNC_TYPE ::=
 /* ------------------------------------ // ENTRADA - SALIDA  // --------------------------------------------------*/
 
 IN_OUT ::=
-    Display:s VALUE_OUT  {: 
+    Display:s Parentesis_izq VALUE_OUT Parentesis_der {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> IN_OUT ::= [ Display VALUE PComa ]\n"); 
     :} PComa |
     Receive:s Parentesis_izq VALUE_IN Parentesis_der {: 
@@ -552,15 +552,15 @@ FUNC ::=
     IsCamaraOn Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsCamaraOn(); ]\n"); 
     :} PComa |
-
+/*
     IsMove Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsMove(); ]\n"); 
     :} PComa |
-  
+  */
     Whistle Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Whistle(); ]\n"); 
     :} PComa |
-
+/*
     MicroOn Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ MicroOn(); ]\n"); 
     :} PComa |
@@ -568,28 +568,32 @@ FUNC ::=
     MicroOff Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ MicroOff(); ]\n"); 
     :} PComa |
+
+*/
     IsSound Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsSound(); ]\n"); 
     :} PComa |
-    Avanzar Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Avanzar(); ]\n"); 
+    Avanzar Parentesis_izq Numero_Entero:s Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Avanzar("+s+","+s+"); ]\n"); 
     :} PComa |
-    Retroceder Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Retroceder(); ]\n"); 
+    Retroceder Parentesis_izq Numero_Entero:s Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Retroceder("+s+","+s+"); ]\n"); 
     :} PComa |
     Detener Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Detener(); ]\n"); 
     :} PComa  |
 
-    CamaraOn Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ CamaraOn(); ]\n"); 
-    :} PComa |
+  
 
      On Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ On(); ]\n"); 
     :} PComa |
 
 /*
+    CamaraOn Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ CamaraOn(); ]\n"); 
+    :} PComa |
+
     CamaraOff Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ CamaraOff(); ]\n"); 
     :} PComa |
@@ -714,7 +718,9 @@ FUNC_TYPE ::=
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsOn(); ]\n"); 
     :} PComa |
 
-
+    IsMove Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsMove(); ]\n"); 
+    :} PComa |
 
 
     error:s {: 

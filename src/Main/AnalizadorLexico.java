@@ -13,7 +13,9 @@ import java.io.File;
  */
 public class AnalizadorLexico {
     public static void main(String[] args) {
-        String ruta = "C:/Users/arcin/Documents/TEC/LYA2/Projectos_Java/Compilador/src/Main/Lexer.flex";   
+        String ruta = "C:/Users/TheTitan/Desktop/Nueva carpeta (2)/Compilador-Base-master/src/Main/Lexer.flex";   
+        //"C:/Users/arcin/Documents/TEC/LYA2/Projectos_Java/Compilador/src/Main/Lexer.flex";  
+        //"C:/Users/TheTitan/Desktop/Nueva carpeta (2)/Compilador-Base-master/src/Main/Lexer.flex"
         generarLexer(ruta);
     }
     public static void generarLexer(String ruta){
