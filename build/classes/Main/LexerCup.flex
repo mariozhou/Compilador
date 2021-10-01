@@ -45,6 +45,9 @@ espacio=[ \s\t\r\n]+
 
 /* ----------------> Palabras reservadas <-----------------------*/
 
+/* ------- | Libreria | ------- */
+( "\//" )    {return new Symbol(sym.Libreria, yychar, yyline, yytext());}
+
 /* ------- | Esc. Principal | ------- */
 
 [H][o][m][e] {return new Symbol(sym.Home, yychar, yyline, yytext());}
@@ -90,6 +93,10 @@ espacio=[ \s\t\r\n]+
 [U][n][l][o][c][k][A][t]            {return new Symbol(sym.UnlockAt, yychar, yyline, yytext());}
 [L][o][c][k][A][t]                  {return new Symbol(sym.LockAt, yychar, yyline, yytext());}
 [C][a][m][e][r][a]                  {return new Symbol(sym.Camera, yychar, yyline, yytext());}
+[R][e][c][o][r][d]                  {return new Symbol(sym.Record, yychar, yyline, yytext());}
+[S][t][o][p][R][e][c]               {return new Symbol(sym.StopRec, yychar, yyline, yytext());}
+[M][o][v][e]                        {return new Symbol(sym.Move, yychar, yyline, yytext());}
+[I][s][M][o][v][e]                  {return new Symbol(sym.IsMove, yychar, yyline, yytext());}
 [A][l][a][r][m]                     {return new Symbol(sym.Alarm, yychar, yyline, yytext());}
 [D][e][v][i][c][e]                  {return new Symbol(sym.Device, yychar, yyline, yytext());}
 [I][s][I][n]                        {return new Symbol(sym.IsIn, yychar, yyline, yytext());}
@@ -103,28 +110,19 @@ espacio=[ \s\t\r\n]+
 [D][e][l][e][t][e][F][a][c][e]      {return new Symbol(sym.DeleteFace, yychar, yyline, yytext());}
 [T][r][u][e]                        {return new Symbol(sym.True, yychar, yyline, yytext());}
 [F][a][l][s][e]                     {return new Symbol(sym.False, yychar, yyline, yytext());}
-
+[I][s][O][n]                        {return new Symbol(sym.IsOn, yychar, yyline, yytext());}
 
 /*----------- | Funciones de WatchDog |-----------------------------*/
 [R][e][c][o][r][d][T][i][m][e]      {return new Symbol(sym.RecordTime, yychar, yyline, yytext());}
-[R][e][c][o][r][d]                  {return new Symbol(sym.Record, yychar, yyline, yytext());}
-[S][t][o][p][R][e][c]               {return new Symbol(sym.StopRec, yychar, yyline, yytext());}
 [C][a][p][t][u][r][e]               {return new Symbol(sym.Capture, yychar, yyline, yytext());}
-[M][o][v][e]                        {return new Symbol(sym.Move, yychar, yyline, yytext());}
 [W][h][i][s][t][l][e]               {return new Symbol(sym.Whistle, yychar, yyline, yytext());}
-[I][s][M][o][v][e]                  {return new Symbol(sym.IsMove, yychar, yyline, yytext());}
 [I][s][S][o][u][n][d]               {return new Symbol(sym.IsSound, yychar, yyline, yytext());}
 [A][v][a][n][z][a][r]               {return new Symbol(sym.Avanzar, yychar, yyline, yytext());}
 [R][e][t][r][o][c][e][d][e][r]      {return new Symbol(sym.Retroceder, yychar, yyline, yytext());}
 [D][e][t][e][n][e][r]               {return new Symbol(sym.Detener, yychar, yyline, yytext());}
-[I][s][O][n]                        {return new Symbol(sym.IsOn, yychar, yyline, yytext());}
-[I][s][O][f][f]                     {return new Symbol(sym.IsOff, yychar, yyline, yytext());}
-[C][a][m][a][r]a][O][n]             {return new Symbol(sym.CamaraOn, yychar, yyline, yytext());}
-[C][a][m][a][r]a][O][f][f]          {return new Symbol(sym.CamaraOff, yychar, yyline, yytext());}
-[M][i][c][r][o]][O][f][f]           {return new Symbol(sym.MicroOff, yychar, yyline, yytext());}
-[M][i][c][r][o]][O][n]              {return new Symbol(sym.MicroOn, yychar, yyline, yytext());}
-/* [C][a][m][a][r]a]                   {return new Symbol(sym.Camara, yychar, yyline, yytext());} */
-[M][i][c][r][o]                      {return new Symbol(sym.Micro, yychar, yyline, yytext());}
+[M][i][c][r][o]                     {return new Symbol(sym.Micro, yychar, yyline, yytext());}
+[I][m][p][o][r][t]                  {return new Symbol(sym.Import, yychar, yyline, yytext());}
+
 
 
 /* ------- | Tipos de datos | ------- */
@@ -176,8 +174,8 @@ espacio=[ \s\t\r\n]+
 
 /* ------- | Op. Incrementales | ------- */
 
-( "--" ) {return new Symbol(sym.Inc, yychar, yyline, yytext());}
-( "++" ) {return new Symbol(sym.Dec, yychar, yyline, yytext());}
+( "--" ) {return new Symbol(sym.Dec, yychar, yyline, yytext());}
+( "++" ) {return new Symbol(sym.Inc, yychar, yyline, yytext());}
 
 /* ------- | Op. Agrupación | ------- */
 
