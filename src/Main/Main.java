@@ -232,7 +232,7 @@ public class Main extends javax.swing.JFrame{
     private String lastSearch = "";
     TablaVar tV = new TablaVar();
     TableFija tF = new TableFija();
-   // InfoErrores e = new InfoErrores();
+  //  InfoErrores e = new InfoErrores();
   //  Contacto c = new Contacto();
     public static boolean error = false;
     public static int countLineas = 0;
@@ -367,6 +367,9 @@ public class Main extends javax.swing.JFrame{
         menubtnSel = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         menubtnCompilar = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         menuTFija = new javax.swing.JMenuItem();
         menuTVar = new javax.swing.JMenuItem();
@@ -376,9 +379,6 @@ public class Main extends javax.swing.JFrame{
         jMenu5 = new javax.swing.JMenu();
         menuTFija2 = new javax.swing.JMenuItem();
         menuTFija5 = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
-        jSeparator7 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem1 = new javax.swing.JMenuItem();
 
         popmenuUndo.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
         popmenuUndo.setText("Deshacer");
@@ -1041,6 +1041,21 @@ public class Main extends javax.swing.JFrame{
 
         jMenuBar1.add(jMenu2);
 
+        jMenu1.setText("Opciones");
+        jMenu1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jMenu1.add(jSeparator7);
+
+        jMenuItem1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        jMenuItem1.setText("Fuente de letra");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
         jMenu3.setText("Tablas");
         jMenu3.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
 
@@ -1111,21 +1126,6 @@ public class Main extends javax.swing.JFrame{
         jMenu5.add(menuTFija5);
 
         jMenuBar1.add(jMenu5);
-
-        jMenu1.setText("Opciones");
-        jMenu1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jMenu1.add(jSeparator7);
-
-        jMenuItem1.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
-        jMenuItem1.setText("Fuente de letra");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
-        jMenuBar1.add(jMenu1);
 
         setJMenuBar(jMenuBar1);
 
@@ -1428,13 +1428,13 @@ public class Main extends javax.swing.JFrame{
     }//GEN-LAST:event_txtPane1KeyReleased
 
     private void menuTFija2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTFija2ActionPerformed
-    //    e.setLocationRelativeTo(null);
-    //    e.setVisible(!e.isVisible());
+      //  e.setLocationRelativeTo(null);
+       // e.setVisible(!e.isVisible());
     }//GEN-LAST:event_menuTFija2ActionPerformed
 
     private void menuTFija5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTFija5ActionPerformed
-   //     c.setLocationRelativeTo(null);
-    //    c.setVisible(!c.isVisible());
+       // c.setLocationRelativeTo(null);
+      //  c.setVisible(!c.isVisible());
     }//GEN-LAST:event_menuTFija5ActionPerformed
 
     /* ------------------------ Métodos secundarios---------------------------------------- */ 
@@ -2169,7 +2169,83 @@ public class Main extends javax.swing.JFrame{
             Reader lector = new BufferedReader(new FileReader("archivo.txt"));
             Lexer lexer = new Lexer(lector);
             String resultado = txt;           
-            lexer.yyreset(lector);                                      
+            lexer.yyreset(lector);       
+            
+            while (true) {
+                Tokens tokens = lexer.yylex();
+                if (tokens == null) {                 
+                    
+                    for (int i = 0; i < listaCompLexico.size(); i++) {
+                        model3.addRow(new Object[]{"", ""});
+                        lexemeTable.setValueAt(listaLexemas.get(i),row,col);
+                        col++;
+                        lexemeTable.setValueAt(listaCompLexico.get(i),row,col);
+                        col++;
+                        lexemeTable.setValueAt(listaLineaLexemas.get(i),row,col);
+                        row++;
+                        col = 0;
+                    }
+                    
+                    getIdValue(listaIdLinea);
+                    
+                    if(!listaIdValor.isEmpty()){
+                            row = 0;
+                            col = 0;
+                            for (int j = 0; j < listaValoresId.size(); j++) {
+                                if(!listaIdFuncValor.contains(listaIdValor.get(j))){
+                                    model1.addRow(new Object[]{"", ""});
+                                    dynamicTable.setValueAt(listaIdValor.get(j),row,col);
+                                    col++;
+                                    // dynamicTable.setValueAt("",row,col);
+                                    dynamicTable.setValueAt(listaValoresId.get(j),row,col);
+                                    col++;
+                                    dynamicTable.setValueAt(listaIdLinea.get(j),row,col);
+                                    row++;
+                                    col = 0;
+                                }
+                            }
+                    }
+                    return resultado;
+                }
+                switch (tokens) {
+                    case Palabra_reservada:
+                        break;
+                    case Identificador:
+                        lexer.linea += 1;                       
+                        
+                        linea = lineas[lexer.linea-1].trim();
+                        
+                        if(!linea.isEmpty()){
+                            if(linea.contains("=") && !linea.contains("==")){
+                                for(int i=0; i<listaIdValor.size(); i++){ 
+                                    if (listaIdValor.get(i).equals(lexer.lexeme)){
+                                        listaIdValor.remove(i);
+                                        listaIdLinea.remove(i);
+                                    }
+                                }                            
+                            }else{
+                                for(int i=0; i<listaIdFuncValor.size(); i++){    
+                                    if (listaIdFuncValor.get(i).equals(lexer.lexeme)){
+                                        // System.out.println("Función -> " + linea);
+                                        listaIdFuncValor.remove(i);
+                                        listaIdFuncLinea.remove(i);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if(linea.contains("=") && !linea.contains("==") && !linea.contains("<=") && !linea.contains(">=")){
+                            listaIdValor.add(lexer.lexeme); 
+                            listaIdLinea.add(lexer.linea);
+                            break;
+                        }else{
+                            listaIdFuncValor.add(lexer.lexeme); 
+                            listaIdFuncLinea.add(lexer.linea); 
+                            break;
+                        }                                     
+                }
+            }
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

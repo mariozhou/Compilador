@@ -28,16 +28,15 @@ terminal
     Numero_Euler, Numero_Euler_Flotante, ERROR, Cadena, ERROR2, AsignacionArrow, SmartCamera, Program, 
     Numero_Flotante, This, Doorbell, FaceCheck, SaveFace, DeleteFace, True, False, IsOn, Then, Room, ERROR3,
     RecordTime, IsCamaraOff, Avanzar, Retroceder, Detener, IsSound, Whistle, Capture, CamaraOn, CamaraOff, MicroOn, 
-    MicroOff, IsCamaraOn, IsOff, Micro
-
-
+    MicroOff, IsCamaraOn, IsOff, Micro, Libreria, Import
 ;
 
 //-------------------------------- NO TERMINALES ----------------------------------------------//
 
 non terminal INICIO, STMT_LIST, STMT, DECL, CIERRE, EXP, ENA_PORT, DEC_OBJETO, OBJETO, DECL_TIPO,
              ACT_PORT, OBJ_PARAMETROS, EXP_LIST, FUNC, FUNC_TYPE, FUNC_PARAMS, THIS_FUNC, THIS_FUNC_TYPE, IN_OUT,
-             VALUE_IN, VALUE_OUT, IF_STMT, COND, COND_IF, COND_IF_2, IF_FUNC_TYPE, STMT_IF
+             VALUE_IN, VALUE_OUT, IF_STMT, COND, COND_IF, COND_IF_2, IF_FUNC_TYPE, STMT_IF,IMPOR,
+             DECLVA, DECLS, TIPO, FUNC_TYPE_IF, FOR_STMT, COND_FOR_2
 ;
 
 //-------------------------------- NO TERMINAL INICIAL ----------------------------------------//
@@ -92,7 +91,16 @@ INICIO ::=
 /* ------------------------------------ // LISTA DE SENTENCIAS // --------------------------------------------*/
 
 STMT_LIST ::=
-    error:s{: 
+
+    IMPOR:s {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ IMPOR STMT_LIST ]\n"); 
+    :} STMT_LIST |
+
+    DECLVA:s {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ DECLVA STMT_LIST ]\n"); 
+    :} STMT_LIST |
+  
+  error:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ error STMT_LIST ]\n");
         Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e006 - Sentencia inválida -> "); 
         Main.error = true;   
@@ -100,13 +108,86 @@ STMT_LIST ::=
     STMT:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ STMT STMT_LIST ]\n"); 
     :} STMT_LIST |
+
     IF_STMT:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ IF_STMT STMT_LIST ]\n"); 
     :} STMT_LIST |
+
+    FOR_STMT:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ FOR_STMT STMT_LIST ]\n"); 
+    :} STMT_LIST |
+   
+
     CIERRE:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ CIERRE ]\n"); 
     :}
 ;
+
+/* ------------------------------------------- // Importa libreria watchdog// -----------------------------------------------------*/
+
+IMPOR ::=
+    Import Identificador:s  {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> IMPOR ::= [ Import "+s+" ]\n"); 
+    :} PComa |
+   
+    Import Identificador:s Punto Identificador:a {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> IMPOR ::= [ Import "+s+" Punto "+a+" PComa ]\n"); 
+    :} PComa
+;
+
+/* ------------------------------------------- // DECLARAR DE VARIABLE WATCHDOG// -----------------------------------------------------*/
+
+DECLVA ::=
+    TIPO Identificador:s {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLVA ::= [ TIPO "+s+" ]\n"); 
+    :}  PComa |
+
+    TIPO Identificador:s Asignacion DECLS {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLVA ::= [ TIPO "+s+" = DECLS ]\n"); 
+    :}  PComa 
+;
+
+TIPO ::=
+    Int:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Int ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Text:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Text ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Float:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Float ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Bool:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Bool ]\n");
+        Main.listaIdValor.add(s+"");
+    :} 
+ 
+;
+
+
+DECLS ::=
+    Cadena:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Numero_Entero:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Numero_Flotante:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    error:s {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> DECLS ::= [ error ; ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e016 - Se espera un valor -> "); 
+        Main.error = true;  
+    :}
+;
+
 
 /* ------------------------------------------- // CIERRE // -----------------------------------------------------*/
 
@@ -364,6 +445,7 @@ STMT_IF ::=
         Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e003 - Sentencia inválida -> "); 
         Main.error = true;  
     :} PComa STMT_IF |
+
     Llave_der:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> STMT_IF ::= [ } ]\n"); 
     :} |
@@ -383,6 +465,19 @@ STMT_IF ::=
 ;
 
 IF_FUNC_TYPE ::=
+    
+/* --------------------------------- FUNCIONES IF DE WATCHDOG  ----------------------------------------*/
+    Micro:s Punto FUNC_TYPE_IF {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> IF_FUNC_TYPE ::= [ "+s+" Punto FUNC_TYPE_IF  ]\n"); 
+    :}  |
+
+    Camera:s Punto FUNC_TYPE_IF {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> IF_FUNC_TYPE ::= [ "+s+" Punto FUNC_TYPE_IF  ]\n"); 
+    :}  |
+     IsSound Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> IF_FUNC_TYPE ::= [ IsSound() ]\n"); 
+    :}  |
+    
     Identificador:s Punto GetTemp Parentesis_izq Parentesis_der {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> IF_FUNC_TYPEE ::= [ "+s+".GetTemp() ]\n"); 
     :} |
@@ -475,6 +570,40 @@ IF_FUNC_TYPE ::=
     :}
 ;
 
+/*--------------------------------------           FOR     {:       COND;   "+c+" Inc )   --------------------------------------------------*/
+FOR_STMT ::=
+    For Parentesis_izq TIPO Identificador:s Asignacion Numero_Entero:a PComa COND PComa Identificador:c Inc Parentesis_der COND_FOR_2{:
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> FOR_STMT ::= [ For(TIPO "+s+" = "+a+"; COND ;"+c+" Inc) ]\n");
+    :} 
+;
+
+COND_FOR_2 ::=
+    Llave_izq:s STMT_IF {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> COND_FOR_2 ::= [ { STMT_IF }  ]\n");
+    :} |
+    error:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> COND_FOR_2 ::= [ error ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e014 - Sintaxis errona de la Sentencia If -> "); 
+        Main.error = true;  
+    :}
+;
+
+/*------------------------------FUNC_TYPE PARA IF DE WATCH para Camera y micro --------------------------------------*/
+FUNC_TYPE_IF ::=
+    IsOn Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE_IF ::= [ IsOn() ]\n"); 
+    :}  |
+
+    IsMove Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE_IF ::= [ IsMove() ]\n"); 
+    :}  |
+    error:s {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> FUNC_TYPE_IF ::= [ error ; ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e012 - Sintaxis errona en la Función -> "); 
+        Main.error = true;  
+    :} 
+;
+
 /* ------------------------------------ // ENTRADA - SALIDA  // --------------------------------------------------*/
 
 IN_OUT ::=
@@ -525,14 +654,14 @@ VALUE_IN ::=
     :}
 ;
 
-/* ------------------------------------ // FUNCIONES  // --------------------------------------------------*/
+/* ------------------------------------ // FUNCIONES DE WATCH DOGS  // --------------------------------------------------*/
 
 
 FUNC ::=
+    RecordTime Parentesis_izq Numero_Entero:s Parentesis_der {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ RecordTime("+s+"); ]\n"); 
+    :} PComa |
 
-
-
-/* --------------------------------- FUNCIONES DE WATCHDOG  ----------------------------------------*/
     Micro:s Punto FUNC_TYPE {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ "+s+" Punto FUNC_TYPE  ]\n"); 
     :}  |
@@ -541,75 +670,69 @@ FUNC ::=
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ "+s+" Punto FUNC_TYPE  ]\n"); 
     :}  |
 
-    RecordTime Parentesis_izq Numero_Entero:s Parentesis_der{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ RecordTime("+s+"); ]\n"); 
-    :} PComa |
-    
     Capture Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Capture(); ]\n"); 
     :} PComa |
 
-    IsCamaraOn Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsCamaraOn(); ]\n"); 
-    :} PComa |
-
-    IsMove Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsMove(); ]\n"); 
-    :} PComa |
-  
     Whistle Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Whistle(); ]\n"); 
     :} PComa |
 
-    MicroOn Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ MicroOn(); ]\n"); 
-    :} PComa |
-
-    MicroOff Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ MicroOff(); ]\n"); 
-    :} PComa |
     IsSound Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsSound(); ]\n"); 
     :} PComa |
-    Avanzar Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Avanzar(); ]\n"); 
-    :} PComa |
-    Retroceder Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Retroceder(); ]\n"); 
-    :} PComa |
+
     Detener Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Detener(); ]\n"); 
-    :} PComa  |
+    :} PComa   |
 
-    CamaraOn Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ CamaraOn(); ]\n"); 
+    Avanzar Parentesis_izq FUNC_PARAMS Parentesis_der:s {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Avanzar(FUNC_PARAMS); ]\n"); 
     :} PComa |
 
-     On Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ On(); ]\n"); 
+    Retroceder Parentesis_izq FUNC_PARAMS Parentesis_der:s {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Retroceder(FUNC_PARAMS); ]\n"); 
     :} PComa |
-
 /*
-    CamaraOff Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ CamaraOff(); ]\n"); 
+     Move Parentesis_izq FUNC_PARAMS Parentesis_der:s {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Move(FUNC_PARAMS); ]\n"); 
     :} PComa |
+
+
+    Identificador:s Punto FUNC_TYPE {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ "+s+" Punto FUNC_TYPE ]\n"); 
+    :}  |
+    Numero_Flotante:s FUNC_TYPE {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ "+s+" FUNC_TYPE ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e012 - Sintaxis errona en la Función -> "); 
+        Main.error = true;  
+    :} |
+   
 */
 
-GetTemp Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ GetTemp(); ]\n"); 
-    :} PComa |
+    
 
-    Move Parentesis_izq Cadena:s Parentesis_der{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Move("+s+"); ]\n"); 
-    :} PComa 
-
-
-
-
+    Punto error:s {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Punto FUNC_TYPE ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e012 - Sintaxis errona en la Función -> "); 
+        Main.error = true;  
+    :}
 ;
 
-
 FUNC_TYPE ::=
+
+/*---------------------FUNCIONES_TYPE DE WATCHDOGS--------------------------*/
+
+    IsOn Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsOn(); ]\n"); 
+    :} PComa |
+
+    IsMove Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsMove(); ]\n"); 
+    :} PComa |
+
+
+/*--------------------------------------------------------------------------*/
     GetTemp Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ GetTemp(); ]\n"); 
     :} PComa |
@@ -624,7 +747,12 @@ FUNC_TYPE ::=
     Program Parentesis_izq FUNC_PARAMS Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ Program(FUNC_PARAMS); ]\n"); 
     :} PComa |
-    
+    On Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ On(); ]\n"); 
+    :} PComa |
+    Off Parentesis_izq Parentesis_der:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ off(); ]\n"); 
+    :} PComa |
     Start Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ off(); ]\n"); 
     :} PComa |
@@ -678,13 +806,14 @@ FUNC_TYPE ::=
     StopRec Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ StopRec(); ]\n"); 
     :} PComa |
-
-   
 /*
-    Move Parentesis_izq Identificador:s Parentesis_der{: 
+    Move Parentesis_izq Cadena:s Parentesis_der{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ Move("+s+"); ]\n"); 
     :} PComa |
 */
+    Move Parentesis_izq Cadena:s Coma Numero_Entero:a Coma Numero_Entero:b Parentesis_der{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ Move("+s+","+a+","+b+"); ]\n"); 
+    :} PComa |
 
     FaceCheck Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ FaceCheck(); ]\n"); 
@@ -695,51 +824,28 @@ FUNC_TYPE ::=
     DeleteFace Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ DeleteFace(); ]\n"); 
     :} PComa |
-
-/*--------------------FUNC_TYPE de  WATCHDOGS ---------------------------*/
-     
-    On Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ On(); ]\n"); 
-    :} PComa |
-    Off Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ off(); ]\n"); 
-    :} PComa |
-    
-    Move Parentesis_izq Cadena:s Parentesis_der{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ Move("+s+"); ]\n"); 
-    :} PComa |
-  
-
-    IsOn Parentesis_izq Parentesis_der:s{: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsOn(); ]\n"); 
-    :} PComa |
-
-
-
-
     error:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> FUNC_TYPE ::= [ error ; ]\n");
-        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e012 - SQintaxis errona en la Función -> "); 
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e012 - Sintaxis errona en la Función -> "); 
         Main.error = true;  
     :} PComa
-
 ;
 
-
-
 FUNC_PARAMS ::=
+    Numero_Entero:s Coma Numero_Entero:a{: 
+        Main.arbolSin.add("( "+(aright+1)+" ) ----> FUNC_PARAMS ::= [ "+s+","+a+" ]\n"); 
+    :} |
+
+    Cadena:a Coma Numero_Entero:b Coma Numero_Entero:c{: 
+        Main.arbolSin.add("( "+(aright+1)+" ) ----> FUNC_PARAMS ::= [ "+a+", "+b+", "+c+" ]\n"); 
+    :} |
+
     Cadena:s Coma THIS_FUNC {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_PARAMS ::= [ "+s+", THIS_FUNC ]\n"); 
     :} |
     Cadena:a Coma THIS_FUNC Coma Cadena:b{: 
         Main.arbolSin.add("( "+(aright+1)+" ) ----> FUNC_PARAMS ::= [ "+a+", THIS_FUNC, "+b+" ]\n"); 
     :} |
-
-/*jkhhuhhj*/
-    Cadena:a Coma Cadena:b Coma Cadena:c{: 
-        Main.arbolSin.add("( "+(aright+1)+" ) ----> FUNC_PARAMS ::= [ "+a+", "+b+", "+c+" ]\n"); 
-    :} |
-
     error:s{:
         Main.arbolSin.add("( "+(sright+1)+" ) ---> FUNC_TYPE ::= [ error ; ]\n");
         Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e011 - Sintaxis erronea en la función Program -> "); 
@@ -828,10 +934,9 @@ THIS_FUNC_TYPE ::=
         Main.arbolSin.add("( "+(sright+1)+" ) ----> THIS_FUNC_TYPE ::= [ Move("+s+") ]\n"); 
     :} |
 
-  /*  Move Parentesis_izq Identificador:s Parentesis_der {: 
+    Move Parentesis_izq Identificador:s Parentesis_der {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> THIS_FUNC_TYPE ::= [ Move("+s+") ]\n"); 
     :} |
-*/
 
     FaceCheck Parentesis_izq Parentesis_der:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> THIS_FUNC_TYPE ::= [ FaceCheck() ]\n"); 
@@ -1256,3 +1361,4 @@ EXP ::=
                 Main.error = true;     
             :}
 ;
+

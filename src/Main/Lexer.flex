@@ -30,12 +30,12 @@ WhiteSpace=[\t\r\n ]+
 
 /* Comillas Simples*/
 ( "\'" ) {lexeme=yytext(); linea = yyline; columna = yycolumn; Main.listaCompLexico.add("Comilla simple"); Main.listaLexemas.add(lexeme); Main.listaLineaLexemas.add(linea+1); return Comilla_simple;}
-( "\'" ) [^';]+ ( "\'" ) | ( "\'" "\'" ) {lexeme=yytext(); linea = yyline; columna = yycolumn; Main.listaCompLexico.add("Cadena"); Main.listaLexemas.add(lexeme); Main.listaLineaLexemas.add(linea+1); return Cadena;}
+( "\'" ) [^';]+ ( "\'" ) | ( "\'" "\'" )  {lexeme=yytext(); linea = yyline; columna = yycolumn; Main.listaCompLexico.add("Cadena"); Main.listaLexemas.add(lexeme); Main.listaLineaLexemas.add(linea+1); return Cadena;}
 
 
 /* ----------------> Palabras reservadas <-----------------------*/
 
-( "IsCamaraOff" | "Micro" | "Retroceder" | "Avanzar" | "IsSound" | "Whistle" | "Capture" | "CamaraOn" | "CamaraOff" | "MicroOn" | "MicroOff" |"Receive" | "DeviceType" | "Enable" | "True" | "FaceCheck" | "IsOff" | "SmartCamera" | "Program" | "This" | "RecordTime" | "Detener" |"IsCamaraOn" | "Doorbell" | "Int" | "Text" | "Float" | "Bool" | "Display" | "For" | "While" | "If" | "Else" | "When" | "Default" | "Home" | "Initialize" | "PortA" | "PortB" | "PortC" | "PortD" | "Enable" | "Room" | "New" |"Temp" | "GetTemp" | "Ac" | "Set" | "Start" | "Shutdown" | "Light" | "Off" | "On" | "LightRGB" | "LightMode" | "Color" | "Door" | "Open" | "Close" | "Lock" | "Unlock" | "Window" | "IsOpen" | "IsClose" | "IsLock" | "Camara" |"IsUnlock" | "UnlockAt" | "LockAt" | "Camera" | "Record" | "StopRec" | "Move" | "IsMove" | "Alarm" | "Device" | "IsIn" | "IsOut" ) {lexeme=yytext(); linea = yyline; columna = yycolumn; Main.listaCompLexico.add("Palabra reservada"); Main.listaLexemas.add(lexeme); Main.listaLineaLexemas.add(linea+1); return Palabra_reservada;}
+( "Import" | "RecordTime" | "IsCamaraOff" | "Micro" | "Detener" | "Retroceder" | "Avanzar" | "IsSound" | "Whistle" | "Capture" | "Receive" | "DeviceType" | "Enable" | "True" | "FaceCheck" | "IsOff" | "SmartCamera" | "Program" | "This" | "IsOn" | "Doorbell" | "Int" | "Text" | "Float" | "Bool" | "Display" | "For" | "While" | "If" | "Else" | "When" | "Default" | "Home" | "Initialize" | "PortA" | "PortB" | "PortC" | "PortD" | "Enable" | "Room" | "New" |"Temp" | "GetTemp" | "Ac" | "Set" | "Start" | "Shutdown" | "Light" | "Off" | "On" | "LightRGB" | "LightMode" | "Color" | "Door" | "Open" | "Close" | "Lock" | "Unlock" | "Window" | "IsOpen" | "IsClose" | "IsLock" |"IsUnlock" | "UnlockAt" | "LockAt" | "Camera" | "Record" | "StopRec" | "Move" | "IsMove" | "Alarm" | "Device" | "IsIn" | "IsOut" ) {lexeme=yytext(); linea = yyline; columna = yycolumn; Main.listaCompLexico.add("Palabra reservada"); Main.listaLexemas.add(lexeme); Main.listaLineaLexemas.add(linea+1); return Palabra_reservada;}
 
 /* ------- | Op. Relacionales | ------- */
 
