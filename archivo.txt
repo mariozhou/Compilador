@@ -3,14 +3,13 @@ mi_camara.Initialize(Home{
 Import paquete1.clase;
 Import tpaquete2.tool;
 
-Text as = 'd';
-Int x = 0; 
-Int datos = 0;
-Float w = 2.0;
+ Text as = 'd';
+ Int x = 0; 
+ Float w = 2.0;
+ Bool B = False; 
+ Bool  a = True;
 
- For (Int i = 0; i>12; i++){
-		Camera.Move('left',5,270);
-	}
+ 
 
 Display 'hola mundo';
 Avanzar(10,10);
@@ -19,13 +18,11 @@ Detener();
 
 Camera.On();
 
- If(Camera.IsOn() == 90){
+ If(Camera.IsOn() == a+a ){
 	Camera.Move('left',5,270);
 	}
 
- If(Micro.IsOn()){
-	 RecordTime(15);
- }
+
 	
 	If(Camera.IsMove()){
 		dx = 1;

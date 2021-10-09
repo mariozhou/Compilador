@@ -1,11 +1,39 @@
 package Main;
-
+import java.util.Hashtable;
 import java_cup.runtime.Symbol;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.awt.Color;
+import java.io.BufferedWriter;
+import java_cup.runtime.*;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Stack;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
+
+
+
+
+
+
 parser code
 {:
     private Symbol s;
     
+  //  Hashtable<String, Lexema> tabla = new Hashtable<>();
     public void syntax_error(Symbol s){
         this.s = s;
     }
@@ -138,14 +166,125 @@ IMPOR ::=
 /* ------------------------------------------- // DECLARAR DE VARIABLE WATCHDOG// -----------------------------------------------------*/
 
 DECLVA ::=
+/*
     TIPO Identificador:s {:
         Main.arbolSin.add("( "+(sright+1)+" ) --> DECLVA ::= [ TIPO "+s+" ]\n"); 
     :}  PComa |
+*/
 
-    TIPO Identificador:s Asignacion DECLS {:
-        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLVA ::= [ TIPO "+s+" = DECLS ]\n"); 
+    DECLS:s{:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLVA ::= [ DECLS ]\n"); 
+        :} |
+
+    Int Identificador:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Int "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Text Identificador:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Text "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+        
+    :} |
+    Float Identificador:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Float "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Bool Identificador:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Bool "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} 
+;
+
+        
+
+/*
+     Int Identificador:s Asignacion Numero_Flotante {:
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Se espera un número entero "); 
+        Main.error = true; 
+    :}  PComa |
+        
+     Int Identificador:s Asignacion Numero_Entero {:
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Se espera un número entero "); 
+        Main.error = true; 
+
+    :}  PComa
+*/
+
+
+DECLS ::=
+    /*---------------    Int    ----------------------*/
+  Int Identificador:s Asignacion Numero_Entero:a PComa {:
+        Main.listaIdValor.add(a+"");
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLS ::= [ Int "+s+" = "+a+"; ]\n");  
+    :}  |
+
+  Int Identificador:s Asignacion error {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ error "+s+" ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Tipos incompatibles se espera un Número entero "); 
+        Main.error = true; 
+    :}  PComa |
+
+    /*---------------    Text    ----------------------*/
+  Text Identificador:s Asignacion Cadena:a PComa {:
+        Main.listaIdValor.add(a+"");
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLS ::= [ Text "+s+" = "+a+"; ]\n");  
+    :}  |
+
+  Text Identificador:s Asignacion error PComa{:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ error "+s+" ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Tipos incompatibles se espera un Cadena "); 
+        Main.error = true; 
+    :}   |
+
+    /*---------------    Float    ----------------------*/
+  Float Identificador:s Asignacion Numero_Flotante:a PComa {:
+        Main.listaIdValor.add(a+"");
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLS ::= [ Text "+s+" = "+a+"; ]\n");  
+    :}  |
+
+  Float Identificador:s Asignacion error PComa{:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ error "+s+" ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Tipos incompatibles se espera un Número real "); 
+        Main.error = true; 
+    :}   |
+
+    /*---------------    Bool    ----------------------*/
+  Bool Identificador:s Asignacion True:a PComa {:
+        Main.listaIdValor.add(a+"");
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLS ::= [ Text "+s+" = "+a+"; ]\n");  
+    :}  |
+  Bool Identificador:s Asignacion False:a PComa {:
+        Main.listaIdValor.add(a+"");
+        Main.arbolSin.add("( "+(sright+1)+" ) --> DECLS ::= [ Text "+s+" = "+a+"; ]\n");  
+    :}  |
+
+  Bool Identificador:s Asignacion error {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ error "+s+" ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Tipos incompatibles se espera un True o False "); 
+        Main.error = true; 
     :}  PComa 
 ;
+
+
+/*
+    Cadena:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    Numero_Entero:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+
+    Int Identificador:s Asignacion error {:
+        Main.arbolSin.add("( "+(sright+1)+" ) --> STMT_LIST ::= [ error "+s+" ]\n");
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e017 - Se espera un número entero "); 
+        Main.error = true; 
+    :}  PComa 
+*/
+
+
+ 
 
 TIPO ::=
     Int:s{: 
@@ -155,6 +294,7 @@ TIPO ::=
     Text:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Text ]\n");
         Main.listaIdValor.add(s+"");
+        
     :} |
     Float:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> TIPO ::= [  Float ]\n");
@@ -167,7 +307,7 @@ TIPO ::=
  
 ;
 
-
+/*
 DECLS ::=
     Cadena:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
@@ -181,12 +321,23 @@ DECLS ::=
         Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
         Main.listaIdValor.add(s+"");
     :} |
+    False:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+    True:s{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLS ::= [   "+s+" ]\n");
+        Main.listaIdValor.add(s+"");
+    :} |
+
     error:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> DECLS ::= [ error ; ]\n");
         Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e016 - Se espera un valor -> "); 
         Main.error = true;  
     :}
 ;
+*/
+
 
 
 /* ------------------------------------------- // CIERRE // -----------------------------------------------------*/
@@ -305,6 +456,8 @@ COND_IF_2 ::=
 COND ::=
     EXP Igual EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP == EXP ]\n");
+        
+        
     :} |
     EXP Diferente EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP != EXP ]\n");
@@ -1262,103 +1415,21 @@ EXP_LIST ::=
         Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP_LIST ::= [ EXP PComa ]\n");
     :} PComa
 ;
-EXP ::= 
-            EXP Suma EXP:s {: 
+
+
+EXP ::=     
+            EXP:a Suma EXP:s {: 
                 Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP + EXP ]\n"); 
+     if ((a.equals("Numero_Entero")&&(s.equals("Numero_Entero")))){
+     Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - tal mal joven -> "); 
+        Main.error = true;  
+}
+//||opc2.equals("enjabonarcera")||opc2.equals("enjuagar")||opc2.equals("enjuagar2")||opc2.equals("secar")))||(opc.equals("cinta")&& cont==0)||(!opc.equals("cinta"))){
+                       
             :} | 
-            EXP Resta EXP:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP - EXP ]\n"); 
-            :} | 
-            EXP Multiplicacion EXP:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP * EXP ]\n"); 
-            :} | 
-            EXP Division EXP:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP / EXP ]\n"); 
-            :} | 
-            Parentesis_izq EXP Parentesis_der:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ ( EXP ) ]\n"); 
-            :}  |
-            Numero_Entero:s {: 
+ Numero_Entero:s {: 
                 Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-            :} |
-            Numero_Flotante:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-            :} |
-            Numero_Euler:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n"); 
-            :} |
-            Numero_Euler_Flotante:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-            :} |
-            Cadena:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-            :} |
-            Identificador:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-            :} |
-            True:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ True ]\n");
-            :} |
-            False:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ False ]\n");
-            :} |
-
-            /* Errores */
-
-            EXP Suma error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP + error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            EXP Resta error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP - error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            EXP Multiplicacion error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP * error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            EXP Division error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP / error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :}  |/*
-            error:s Suma EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error + EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;   
-            :} | 
-            error:s Resta EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error - EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            error:s Multiplicacion EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error * EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            error:s Division EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error / EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} |*/ 
-            Parentesis_izq EXP error:s Parentesis_der {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ ( EXP error ) ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;     
-            :} | 
-            Parentesis_izq error:s EXP Parentesis_der {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ ( error EXP ) ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;     
-            :} | 
-            Parentesis_izq error:s Parentesis_der {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP ( error ) ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;     
             :}
 ;
+            
 
