@@ -817,7 +817,11 @@ public class Main extends javax.swing.JFrame{
         dynamicTable.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         dynamicTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
                 "Id", "Tipo", "Valor", "Linea"
@@ -2052,13 +2056,14 @@ public class Main extends javax.swing.JFrame{
                             }
                         }
                     }
-                break;
+                break; 
                 */
             case 0:
                 cleanTable2();
                     if(!listaIdValor.isEmpty()){
+                       
                         for (int j = 0; j < listaValoresId.size(); j++) {
-                            if(!listaIdFuncValor.contains(listaIdValor.get(j))){
+                //            if(!listaIdFuncValor.contains(listaIdValor.get(j))){
                                 model1.addRow(new Object[]{"",""});
                                 dynamicTable.setValueAt(listaIdValor.get(j),row,col);
                                 col++;
@@ -2068,9 +2073,10 @@ public class Main extends javax.swing.JFrame{
                                 dynamicTable.setValueAt(listaValoresId.get(j),row,col);
                                 col++;
                                 dynamicTable.setValueAt(listaIdLinea.get(j),row,col);
+                                
                                 row++;
                                 col =0;
-                            }
+                   //         }
                         }
                     }
                 break;
@@ -2100,9 +2106,51 @@ public class Main extends javax.swing.JFrame{
                 return true;
             }
         }
-        return true;
+        return false;
     }
     
+    public static int returnid(String a) {// comprobar id si existen en la tabla de simbolo
+        int in=0;
+        for (int i = 0; i < listaIdValor.size(); i++) {
+            in =i;
+            if (listaIdValor.get(i).equals(a)) {
+                return in;
+            }
+        }
+        return in;
+    }
+    
+    public static String removeid(String a){
+ 
+        String x="";
+         for(int i=0; i<listaIdValor.size(); i++){ 
+          
+           //  System.out.println(listaIdValor.get(i));
+                if (listaIdValor.get(i).equals(a)){
+                   // i++;
+                   System.out.println(listaValoresId.get(i)+" "+listaIdValor.get(i));
+                    x =listaIdTipo.get(i);
+                    listaIdValor.remove(i);                                     
+                    listaIdLinea.remove(i);
+                    listaIdTipo.remove(i);
+                    listaValoresId.remove(i);
+                  //  i--;
+                     
+                     
+                    System.out.println(listaIdValor.size()); 
+                    System.out.println(listaIdLinea.size()); 
+                    System.out.println(listaIdTipo.size()); 
+                    System.out.println(listaValoresId.size()); 
+                    
+                //   model1.removeRow(listaIdValor.size());
+                  
+                //    dynamicTable.remove(listaIdValor.size());
+                  
+                                    }
+                  
+                                }
+          return x;
+    }
     
     public String[] acomodar(String[] lista){
         for(int i = 0; i<lista.length; i++){  
@@ -2211,12 +2259,12 @@ public class Main extends javax.swing.JFrame{
             if(temp.contains("=") && temp.contains(";")){
                 temp = temp.substring(temp.indexOf("=") + 1);
                 temp = temp.substring(0, temp.indexOf(";"));
-              //  listaValoresId.add(temp.trim());
+                listaValoresId.add(temp.trim());
             }else{
-               // listaIdValor.remove(i); 
-               // listaIdLinea.remove(i);
-             
-                              
+                listaIdValor.remove(i); 
+                listaIdLinea.remove(i);
+                listaIdTipo.remove(i);
+                        
                 System.out.println("error" + " -> " + temp);
             }       
         }
@@ -2601,7 +2649,7 @@ public class Main extends javax.swing.JFrame{
     private javax.swing.JButton btnRedo;
     private javax.swing.JButton btnUndo;
     private javax.swing.JComboBox<String> comboVariable;
-    public javax.swing.JTable dynamicTable;
+    public static javax.swing.JTable dynamicTable;
     private javax.swing.Box.Filler filler1;
     private javax.swing.Box.Filler filler10;
     private javax.swing.Box.Filler filler11;
@@ -2653,7 +2701,7 @@ public class Main extends javax.swing.JFrame{
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblCol;
     private javax.swing.JLabel lblLinea;
-    public javax.swing.JTable lexemeTable;
+    static javax.swing.JTable lexemeTable;
     private javax.swing.JMenuItem menuAbrir;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuItem menuCopiar;

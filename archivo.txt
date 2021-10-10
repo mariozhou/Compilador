@@ -2,18 +2,22 @@ mi_camara.Initialize(Home{
 
 Import paquete1.clase;
 Import tpaquete2.tool;
-	 Float das = 2.0;
- Text as = 's';
  Float  e; 
- Int  k; 
- Int g = 4; 
- Int g = 4; 
- Int g = 4; 
+ Int  qw; 
+ Text aww;
+ Bool  abs;
+ Float das = 2.0;
+ Int  k = 4; 
+ Int  ki = 40; 
  Float w = 20.0;
  Bool B = False; 
- Bool  a = True;
+ Bool  ab = True;
  Text as = 's';
 
+Bool  abwe = True;
+Bool  aqewb = True;
+ k = 89;
+ki = 80;
 
 Display 'hola mundo';
 Avanzar(10,10);
