@@ -237,11 +237,15 @@ public class Main extends javax.swing.JFrame{
     public static boolean error = false;
     public static int countLineas = 0;
     public static int variableSize = 0;
+     static ArrayList<ArryL> Arr = new ArrayList<ArryL>();
+   
     public static ArrayList<Integer> listaLineas = new ArrayList<Integer>();
     public static ArrayList<String> listaErrores = new ArrayList<String>();
     public static ArrayList<String> listaCodigo = new ArrayList<String>();
     public static ArrayList<String> listaIdValor = new ArrayList<String>();
+    public static ArrayList<String> listaIdTipo = new ArrayList<String>();
     public static ArrayList<Integer> listaIdLinea = new ArrayList<Integer>();
+    
     public static ArrayList<String> listaValoresId = new ArrayList<String>();
     public static ArrayList<String> listaLexemas = new ArrayList<String>();
     public static ArrayList<Integer> listaLineaLexemas = new ArrayList<Integer>();
@@ -816,11 +820,11 @@ public class Main extends javax.swing.JFrame{
 
             },
             new String [] {
-                "Id", "Valor", "Linea"
+                "Id", "Tipo", "Valor", "Linea"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1215,6 +1219,7 @@ public class Main extends javax.swing.JFrame{
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+     
         try {
             cleanTables();
             actionSave();
@@ -1968,12 +1973,66 @@ public class Main extends javax.swing.JFrame{
 
     // ----------------------------- Tablas ----------------------------------------   
     
+    //---------------------- agregar id watch ------------------------------- //
+    public static void agregarid(String ID, String tipo, String val,String linea) { 
+       Arr.add(new ArryL(ID, tipo, val,linea));
+    }
+    
+    //--------------------- actualizar valor y linea de id watch ------------------------------- //
+     public static void actualizar(String ID, String tipo, String val, int v) {
+         for (int i = 0; i < Arr.size(); i++) {
+            if (Arr.get(i).getId().equals(ID)) {
+        if ((Arr.get(i).getTipo().equals("Int")&& Main.isNumeric(val))||(Arr.get(i).getTipo().equals("Float")&& Main.isNumericFloat(val))||(Arr.get(i).getTipo().equals("Text")&&((val.charAt(0)==34)&& (val.charAt(val.length()-1)==34)))||((Arr.get(i).getTipo().equals("Bool"))&&(val.equals("True")||val.equals("False"))))
+                Arr.get(i).setVal(val);
+            else{
+           //  setError("Error Semantico; el valor: "+val+" . Que se encuentra renglon: "+(v+1)+" no concuerda con el tipo de dato: "+Arr.get(i).getTipo());
+
+             }
+            }
+        }
+        
+       }
+     
+    
+      public static boolean isNumeric(String cadena) {
+
+        boolean resultado;
+
+        try {
+            Integer.parseInt(cadena);
+       
+            resultado = true;
+        } catch (NumberFormatException excepcion) {
+            resultado = false;
+        }
+
+        return resultado;
+    }
+      public static boolean isNumericFloat(String cadena) {
+
+        boolean resultado;
+
+        try {
+            //Integer.parseInt(cadena);
+            Float.parseFloat(cadena);
+            resultado = true;
+        } catch (NumberFormatException excepcion) {
+            resultado = false;
+        }
+
+        return resultado;
+    }
+    
+    
+    
     public void llenarTabla(int index){
         
         int col = 0;
         int row = 0;
+      
 
         switch (index) {
+            /*
             case -1:
                 cleanTable2();
                     if(!listaIdValor.isEmpty()){
@@ -1982,35 +2041,40 @@ public class Main extends javax.swing.JFrame{
                                 model1.addRow(new Object[]{"", ""});
                                 dynamicTable.setValueAt(listaIdValor.get(j),row,col);
                                 col++;
+                                dynamicTable.setValueAt(listaIdTipo.get(j),row,col);  // tipo de id
+                                col++;
                                 // dynamicTable.setValueAt("",row,col);
                                 dynamicTable.setValueAt(listaValoresId.get(j),row,col);
                                 col++;
                                 dynamicTable.setValueAt(listaIdLinea.get(j),row,col);
                                 row++;
-                                col -= 2;
+                                col = 0;
                             }
                         }
                     }
                 break;
+                */
             case 0:
                 cleanTable2();
                     if(!listaIdValor.isEmpty()){
                         for (int j = 0; j < listaValoresId.size(); j++) {
                             if(!listaIdFuncValor.contains(listaIdValor.get(j))){
-                                model1.addRow(new Object[]{"", ""});
+                                model1.addRow(new Object[]{"",""});
                                 dynamicTable.setValueAt(listaIdValor.get(j),row,col);
+                                col++;
+                                dynamicTable.setValueAt(listaIdTipo.get(j),row,col);  // tipo de id
                                 col++;
                                 // dynamicTable.setValueAt("",row,col);
                                 dynamicTable.setValueAt(listaValoresId.get(j),row,col);
                                 col++;
                                 dynamicTable.setValueAt(listaIdLinea.get(j),row,col);
                                 row++;
-                                col -= 2;
+                                col =0;
                             }
                         }
                     }
                 break;
-            case 1:
+        /*    case 1:
                 cleanTable2();
                 for (int j = 0; j < listaIdFuncValor.size(); j++) {
                     model1.addRow(new Object[]{"", ""});
@@ -2020,13 +2084,25 @@ public class Main extends javax.swing.JFrame{
                     col++;
                     dynamicTable.setValueAt(listaIdFuncLinea.get(j),row,col);
                     row++;
-                    col -= 2;
+                    col = 0;
                 }
                 break;
+                */
             default:
-                System.out.println("hello");
+                System.out.println("hello llenar tabla");
         }
     }
+    
+    public static boolean buscarid(String a) {// comprobar id si existen en la tabla de simbolo
+
+        for (int i = 0; i < listaIdValor.size(); i++) {
+            if (listaIdValor.get(i).equals(a)) {
+                return true;
+            }
+        }
+        return true;
+    }
+    
     
     public String[] acomodar(String[] lista){
         for(int i = 0; i<lista.length; i++){  
@@ -2135,10 +2211,12 @@ public class Main extends javax.swing.JFrame{
             if(temp.contains("=") && temp.contains(";")){
                 temp = temp.substring(temp.indexOf("=") + 1);
                 temp = temp.substring(0, temp.indexOf(";"));
-                listaValoresId.add(temp.trim());
+              //  listaValoresId.add(temp.trim());
             }else{
-                listaIdValor.remove(i); 
-                listaIdLinea.remove(i);
+               // listaIdValor.remove(i); 
+               // listaIdLinea.remove(i);
+             
+                              
                 System.out.println("error" + " -> " + temp);
             }       
         }
@@ -2194,12 +2272,14 @@ public class Main extends javax.swing.JFrame{
                             for (int j = 0; j < listaValoresId.size(); j++) {
                                 if(!listaIdFuncValor.contains(listaIdValor.get(j))){
                                     model1.addRow(new Object[]{"", ""});
-                                    dynamicTable.setValueAt(listaIdValor.get(j),row,col);
+                              //      dynamicTable.setValueAt(listaIdValor.get(j),row,col);
                                     col++;
+                              //      dynamicTable.setValueAt(listaIdTipo.get(j),row,col);  // tipo de id
+                              //      col++;
                                     // dynamicTable.setValueAt("",row,col);
-                                    dynamicTable.setValueAt(listaValoresId.get(j),row,col);
+                              //      dynamicTable.setValueAt(listaValoresId.get(j),row,col);
                                     col++;
-                                    dynamicTable.setValueAt(listaIdLinea.get(j),row,col);
+                              //      dynamicTable.setValueAt(listaIdLinea.get(j),row,col);
                                     row++;
                                     col = 0;
                                 }
@@ -2219,10 +2299,12 @@ public class Main extends javax.swing.JFrame{
                             if(linea.contains("=") && !linea.contains("==")){
                                 for(int i=0; i<listaIdValor.size(); i++){ 
                                     if (listaIdValor.get(i).equals(lexer.lexeme)){
-                                        listaIdValor.remove(i);
-                                        listaIdLinea.remove(i);
+                                        //listaIdValor.remove(i);                                     
+                                      //  listaIdLinea.remove(i);
+                                        
                                     }
-                                }                            
+                                }//agreagar codigo de validar solo declaracion sin asginacion: Tipo id;     
+                                
                             }else{
                                 for(int i=0; i<listaIdFuncValor.size(); i++){    
                                     if (listaIdFuncValor.get(i).equals(lexer.lexeme)){
@@ -2234,13 +2316,13 @@ public class Main extends javax.swing.JFrame{
                             }
                         }
                         
-                        if(linea.contains("=") && !linea.contains("==") && !linea.contains("<=") && !linea.contains(">=")){
-                            listaIdValor.add(lexer.lexeme); 
-                            listaIdLinea.add(lexer.linea);
+                        if(linea.contains("=") && linea.contains("Text") &&!linea.contains("==") && !linea.contains("<=") && !linea.contains(">=")&& !linea.contains(">")&& !linea.contains("++")){
+                           // listaIdValor.add(lexer.lexeme);  
+                            //listaIdLinea.add(lexer.linea);
                             break;
                         }else{
-                            listaIdFuncValor.add(lexer.lexeme); 
-                            listaIdFuncLinea.add(lexer.linea); 
+                           // listaIdFuncValor.add(lexer.lexeme); 
+                          //  listaIdFuncLinea.add(lexer.linea); 
                             break;
                         }                                     
                 }
@@ -2289,6 +2371,7 @@ public class Main extends javax.swing.JFrame{
         listaIdLinea.clear();
         listaValoresId.clear();
         listaIdValor.clear();
+        listaIdTipo.clear();
         
         listaErrores.clear();
         listaCodigo.clear();

@@ -2,30 +2,32 @@ mi_camara.Initialize(Home{
 
 Import paquete1.clase;
 Import tpaquete2.tool;
-
- Text as = 'd';
- Int x = 0; 
- Float w = 2.0;
+	 Float das = 2.0;
+ Text as = 's';
+ Float  e; 
+ Int  k; 
+ Int g = 4; 
+ Int g = 4; 
+ Int g = 4; 
+ Float w = 20.0;
  Bool B = False; 
  Bool  a = True;
+ Text as = 's';
 
- 
 
 Display 'hola mundo';
 Avanzar(10,10);
 Retroceder(5,20);
 Detener();
 
-Camera.On();
 
- If(Camera.IsOn() == a+a ){
-	Camera.Move('left',5,270);
-	}
+Camera.On();
 
 
 	
 	If(Camera.IsMove()){
 		dx = 1;
 }	
+dx = 4;
 
 });
