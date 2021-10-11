@@ -96,7 +96,7 @@ public class Main extends javax.swing.JFrame{
                 
                 while (wordR <= after) {
                     if (wordR == after || String.valueOf(text.charAt(wordR)).matches("(\\W)")) {     
-                        if((text.substring(wordL, wordR).matches("((\\n)|(\\s))* (Receive|DeviceType|Else|True|Int|Text|Float|Bool|Display|For|While|If|Else|When|Default|PortA|PortB|PortC|PortD|New)"))){
+                        if((text.substring(wordL, wordR).matches("((\\n)|(\\s))* (False|Retroceder|Import|Detener|Avanzar|Receive|DeviceType|Else|True|Int|Text|Float|Bool|Display|For|While|If|Else|When|Default|PortA|PortB|PortC|PortD|New)"))){
                             setCharacterAttributes(wordL, wordR - wordL,attrBlue, false); 
                             contador++;                       
 //                        }else if((text.substring(wordL, wordR).matches("((\\n)|(\\s))*(alex|asin|asem)"))){
@@ -2100,7 +2100,6 @@ public class Main extends javax.swing.JFrame{
     }
     
     public static boolean buscarid(String a) {// comprobar id si existen en la tabla de simbolo
-
         for (int i = 0; i < listaIdValor.size(); i++) {
             if (listaIdValor.get(i).equals(a)) {
                 return true;
@@ -2110,6 +2109,8 @@ public class Main extends javax.swing.JFrame{
     }
     
     public static int returnid(String a) {// comprobar id si existen en la tabla de simbolo y retornar el index
+      
+        
         int in=0;
         for (int i = 0; i < listaIdValor.size(); i++) {
             in =i;
@@ -2193,7 +2194,7 @@ public class Main extends javax.swing.JFrame{
         int col = 0;
         int row = 0;
         
-        String[] pal_res = new String[]{"Int", "Text" , "Float" , "Bool" , "For" , "While" , "If" , "Else" , "When" , "Default" ,"Display" ,"Home" , "Initialize" , "PortA" , "PortB" , "PortC" , "PortD" , "Enable" , "Room", "Program", "New" ,"Temp" , "GetTemp" , "Ac" , "Set" , "Start" , "Shutdown" , "Light" , "Off" , "On" , "LightRGB" , "LightMode" , "Color" , "Door" , "Open" , "Close" , "Lock" , "Unlock" , "Window" , "IsOpen" , "IsClose" , "IsLock" ,"IsUnlock" , "UnlockAt" , "LockAt" , "Camera" , "Record" , "StopRec" , "Move" , "IsMove", "Alarm" , "Device" , "IsIn" , "IsOut", "Display", "Doorbell","UnSync","FaceCheck","SaveFace","DeleteFace", "DeviceType","Sync","SmartCamera","Receive"}; // 
+        String[] pal_res = new String[]{"Int", "Text" , "Float" , "Bool" , "For" , "While" , "If" , "Else" , "When" , "Default" ,"Display" ,"Home" , "Initialize" , "PortA" , "PortB" , "PortC" , "PortD" , "Enable" , "Room", "Program", "New" ,"Temp" , "GetTemp" , "Ac" , "Set" , "Start" , "Shutdown" , "Light" , "Off" , "On" , "LightRGB" , "LightMode" , "Color" , "Door" , "Open" , "Close" , "Lock" , "Unlock" , "Window" , "IsOpen" , "IsClose" , "IsLock" ,"IsUnlock" , "UnlockAt" , "LockAt" , "Camera" , "Record" , "StopRec" , "Move" , "IsMove", "Alarm" , "Device" , "IsIn" , "IsOut", "Doorbell","UnSync","FaceCheck","SaveFace","DeleteFace", "DeviceType","Sync","SmartCamera","Receive"}; // 
         pal_res = acomodar(pal_res);
         String[] compl_pal_res = new String[]{"Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada","Palabra reservada"};
         compl_pal_res = acomodar(compl_pal_res);
@@ -2466,6 +2467,7 @@ public class Main extends javax.swing.JFrame{
         listaErroresSin.clear();
         arbolSin.clear();
         
+        listavalor1.clear();
         /* ------------------------------------------------- */
         
         String txt = "";

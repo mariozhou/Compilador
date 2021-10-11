@@ -2,21 +2,18 @@ mi_camara.Initialize(Home{
 
 Import paquete1.clase;
 Import tpaquete2.tool;
- Float  e; 
- Int  qw; 
- Text aww;
- Bool  abs;
- Float das = 2.0;
- Int  k = 4; 
- Int  ki = 40; 
- Float w = 20.0;
- Bool B = False; 
- Bool  ab = True;
- Text as = 's';
 
-Bool  abwe = True;
-Bool  aqewb = True;
-# k = 5;
+ Float real = 2.0;
+ Float real2 = 2.0;
+ Int  int = 4; 
+ Int  int2 = 40; 
+ Int int3;
+ Bool b1 = False; 
+ Bool  b2 = True;
+ Text txt = '1';
+  Text txt2 = '2';
+
+ int = int2;
 #ki = 80;
 
 Display 'hola mundo';
@@ -24,14 +21,26 @@ Avanzar(10,10);
 Retroceder(5,20);
 Detener();
 
-
 Camera.On();
-ki = 40;
-k = 1;
-	
+	#int
+	int = 43 + 2;
+	int2 = 1 + 1;
+
+	#bool
+	b1 = True;
+	b2 = False;
+	#Float
+	real = 80.0 + 80.0;
+	real2 = 80.0;
+
+	#text
+	txt = 'nuevo' +'d';
+	txt2 =  's';
+
 	If(Camera.IsMove()){
-		k = 1;
+		int3 = int + int2;
 }	
-ki = 40;
-das = 80.0;
+ 
+
+
 });

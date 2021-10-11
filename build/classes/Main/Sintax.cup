@@ -223,12 +223,12 @@ DECLVA ::=
 
 /*
      Int Identificador:s Asignacion Numero_Flotante {:
-        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Se espera un número entero "); 
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Se espera un Número entero "); 
         Main.error = true; 
     :}  PComa |
         
      Int Identificador:s Asignacion Numero_Entero {:
-        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Se espera un número entero "); 
+        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Se espera un Número entero "); 
         Main.error = true; 
 
     :}  PComa
@@ -1228,6 +1228,327 @@ ENA_PORT ::=
 /* ------------------------------------ // DECLARACIONES // ------------------------------------------------------------*/
 
 DECL ::=
+
+/*------------------------------ SUMA o SOLO ASIGNACION ---------------------------------*/
+/*------------------------------- Int  ---------------------------------*/
+ Identificador:s Asignacion Numero_Entero:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+             System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Int")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+"");
+            System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Enteros "); 
+                    Main.error = true; 
+            }
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+        }
+:} | 
+ 
+      Identificador:s Asignacion Numero_Entero:a Suma Numero_Entero:b PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma "+b+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+             System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Int")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+" + "+b);
+                 System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Enteros "); 
+                    Main.error = true; 
+            }
+        }else{
+           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+          Main.error = true; 
+
+        }
+:}  |
+
+/*---------------------------- errores de int -------------------------------------*/
+ Identificador:s Asignacion Numero_Entero:a Suma error PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma error PComa ]\n");
+            if((Main.buscarid(s+""))  ){ //sino encuentro id: print tipo incompatible, si: variable no declarada
+                    System.out.println("id existe "+s);
+                    System.out.println("error1 "+s);
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Enteros "); 
+                    Main.error = true; 
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+System.out.println("error2 "+s);
+            }
+:}    |
+
+ Identificador:s Asignacion error Suma  Numero_Entero:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma error PComa ]\n");
+            if((Main.buscarid(s+""))  ){ //sino encuentro id: print tipo incompatible, si: variable no declarada
+                    System.out.println("id existe "+s);
+                    System.out.println("error1 "+s);
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Enteros "); 
+                    Main.error = true; 
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+System.out.println("error2 "+s);
+            }
+:} |
+
+
+/*----------------------------------   Text --------------------------------------------*/
+ Identificador:s Asignacion Cadena:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+               System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Text")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+"");
+          System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Cadenas "); 
+                 Main.error = true; 
+            }
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+        }
+:} | 
+ 
+      Identificador:s Asignacion Cadena:a Suma Cadena:b PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma "+b+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+                System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Text")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+" + "+b);
+          System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Cadenas "); 
+                 Main.error = true; 
+            }
+        }else{
+           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+           Main.error = true; 
+        }
+:}  |
+
+/*---------------------------- errores de Text -------------------------------------*/
+ Identificador:s Asignacion Cadena:a Suma error PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma error PComa ]\n");
+            if((Main.buscarid(s+""))  ){ //sino encuentro id: print tipo incompatible, si: variable no declarada
+                    System.out.println("id existe "+s);
+                    System.out.println("error1 "+s);
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Cadenas "); 
+                    Main.error = true; 
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+System.out.println("error2 "+s);
+            }
+:}  |
+
+ Identificador:s Asignacion error Suma  Cadena:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma error PComa ]\n");
+            if((Main.buscarid(s+""))  ){ //sino encuentro id: print tipo incompatible, si: variable no declarada
+                    System.out.println("id existe "+s);
+                    System.out.println("error1 "+s);
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Cadenas "); 
+                    Main.error = true; 
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+System.out.println("error2 "+s);
+            }
+:} |
+/*----------------------------------   Float --------------------------------------------*/
+ Identificador:s Asignacion Numero_Flotante:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+               System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Float")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+"");
+          System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Reales "); 
+                 Main.error = true; 
+            }
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+        }
+:} | 
+ 
+      Identificador:s Asignacion Numero_Flotante:a Suma Numero_Flotante:b PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma "+b+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+                System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Float")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+" + "+b);
+          System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Reales "); 
+                 Main.error = true; 
+            }
+        }else{
+           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+           Main.error = true; 
+        }
+:}  |
+
+/*---------------------------- errores de Float -------------------------------------*/
+ Identificador:s Asignacion Numero_Flotante:a Suma error PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma error PComa ]\n");
+            if((Main.buscarid(s+""))  ){ //sino encuentro id: print tipo incompatible, si: variable no declarada
+                    System.out.println("id existe "+s);
+                    System.out.println("error1 "+s);
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Reales "); 
+                    Main.error = true; 
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+System.out.println("error2 "+s);
+            }
+:}  |
+
+ Identificador:s Asignacion error Suma  Numero_Flotante:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma error PComa ]\n");
+            if((Main.buscarid(s+""))  ){ //sino encuentro id: print tipo incompatible, si: variable no declarada
+                    System.out.println("id existe "+s);
+                    System.out.println("error1 "+s);
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Reales "); 
+                    Main.error = true; 
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+System.out.println("error2 "+s);
+            }
+:} |
+
+/*----------------------------------   Bool  --------------------------------------------*/
+ Identificador:s Asignacion True:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+               System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Bool")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+"");
+          System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera True o False  "); 
+                 Main.error = true; 
+            }
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+        }
+:} | 
+
+ Identificador:s Asignacion False:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+               System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Bool")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+"");
+          System.out.println("tipo");
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera True o False "); 
+                 Main.error = true; 
+            }
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+        }
+:}  | 
+
+
+/*----------------------------------   ID  --------------------------------------------*/
+
+ Identificador:s Asignacion Identificador:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+              if(Main.buscarid(s+"")  ){//si primer id existe
+               System.out.println("id existe");
+               if(Main.buscarid(a+"") ) { //si 2do id existe
+                if((Main.returntipo(s+"") == Main.returntipo(s+""))  ){// son compatible?
+                  Main.listaIdTipo.add(Main.removeid(s+""));
+                  Main.listaIdValor.add(s+"");
+                  Main.listaIdLinea.add((sright+1));
+                  Main.listaValoresId.add(a+"");
+                System.out.println("tipo");
+              }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera "+(Main.returntipo(s+""))); 
+                 Main.error = true; 
+            }
+                }else{  
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+a+" no declarada  en: " ); 
+                    Main.error = true; 
+                    }
+           
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+                }
+:} | 
+ 
+      Identificador:s Asignacion Identificador:a Suma Identificador:b PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+              if(Main.buscarid(s+"")  ){//si primer id existe
+               System.out.println("id existe");
+               if(Main.buscarid(a+"") ) { //si 2do id existe
+                    if(Main.buscarid(b+"") ) { //si 3er id existe
+                if((Main.returntipo(s+"") == Main.returntipo(s+""))  ){// son compatible?
+                  Main.listaIdTipo.add(Main.removeid(s+""));
+                  Main.listaIdValor.add(s+"");
+                  Main.listaIdLinea.add((sright+1));
+                  Main.listaValoresId.add(a+"");
+                System.out.println("tipo");
+              }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera "+(Main.returntipo(s+""))); 
+                 Main.error = true; 
+            }
+                }else{  
+                        Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+b+" no declarada  en: " ); 
+                        Main.error = true; 
+                    }
+           
+                 }else{
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+a+" no declarada  en: " ); 
+                    Main.error = true; 
+                 
+                }
+                }else{
+                    Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                     Main.error = true; 
+                }
+:}  |
+
+
+
+
+
+ 
+/*
     Identificador:s Asignacion DECL_TIPO:a{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> DECL ::= [ "+s+" = DECL_TIPO ]\n");
 
@@ -1237,7 +1558,7 @@ DECL ::=
           Main.listaIdTipo.add(Main.removeid(s+""));
           Main.listaIdValor.add(s+"");
           Main.listaIdLinea.add((sright+1));
-         // Main.listaValoresId.add(a+"");
+          Main.listaValoresId.add(a+"");
 
         Main.listavalor1.add(Main.returntipo(s+""));
        
@@ -1247,6 +1568,8 @@ DECL ::=
         }
         
     :}  |
+
+*/
 
     /* Errores */
 
@@ -1360,124 +1683,54 @@ DECL_TIPO ::=
 /* ------------------------------------ // EXPRESIONES // --------------------------------------------------*/
 
 EXP_LIST ::=
-    EXP:s {: 
+   /* EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP_LIST ::= [ EXP PComa ]\n");
     :} PComa
+
+ |
+
+    Identificador:s Asignacion Numero_Entero:a PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+             System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Int")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+"");
+
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Enteros "); 
+                    Main.error = true; 
+            }
+                 }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+                 Main.error = true; 
+
+        }
+:} | 
+ 
+      Identificador:s Asignacion Numero_Entero:a Suma Numero_Entero:b PComa{: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> EXP ::= [ "+s+" = "+a+" Suma "+b+" PComa ]\n");
+            if(Main.buscarid(s+"")  ){
+             System.out.println("id existe");
+            if(Main.returntipo(s+"").equals("Int")) {
+          Main.listaIdTipo.add(Main.removeid(s+""));
+          Main.listaIdValor.add(s+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(a+" + "+b);
+
+            }else{
+                 Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera Numeros Enteros "); 
+                    Main.error = true; 
+            }
+        }else{
+           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e019 - Variable "+s+" no declarada  en: " ); 
+          Main.error = true; 
+
+        }
+:} */
 ;
-
-
-EXP ::=     
-      EXP:a Suma EXP:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP + EXP ]\n"); 
- // if ((a.equals("cinta")&&(s.equals("enjabonar")||opc2.equals("enjabonarcera")||opc2.equals("enjuagar")||opc2.equals("enjuagar2")||opc2.equals("secar")))||(opc.equals("cinta")&& cont==0)||(!opc.equals("cinta"))){
-             
-            :} | 
-            EXP Resta EXP:s {: 
-            
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP - EXP ]\n"); 
-            :} | 
-            EXP Multiplicacion EXP:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP * EXP ]\n"); 
-            :} | 
-            EXP Division EXP:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP / EXP ]\n"); 
-            :} | 
-            Parentesis_izq EXP Parentesis_der:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ ( EXP ) ]\n"); 
-            :}  |
-            Numero_Entero:s {: 
-                 Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-            Main.listaValoresId.add(s+"");
-          /*  if(!(Main.listavalor1.get(Main.listavalor1.size()-1) == "Int")){
-                     Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e020 - Tipos incompatibles se espera un Cadena "); 
-                     Main.error = true; 
-                }*/
-
-            :} |
-            Numero_Flotante:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-     //           Main.listaValoresId.add(s+"");
-            :} |
-            
-            Cadena:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-      //          Main.listaValoresId.add(s+"");
-            :} |
-            Identificador:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ "+s+" ]\n");
-    //            Main.listaValoresId.add(s+"");
-            :} |
-            True:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ True ]\n");
-   //             Main.listaValoresId.add(s+"");
-            :} |
-            False:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ False ]\n");
-  //              Main.listaValoresId.add(s+"");
-            :} |
-
-
-            /* Errores */
-
-            EXP Suma error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP + error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            EXP Resta error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP - error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            EXP Multiplicacion error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP * error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            EXP Division error:s {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP / error ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :}  |
-/*
-            error:s Suma EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error + EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;   
-            :} | 
-            error:s Resta EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error - EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            error:s Multiplicacion EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error * EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} | 
-            error:s Division EXP {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ error / EXP ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;    
-            :} |
-*/ 
-            Parentesis_izq EXP error:s Parentesis_der {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ ( EXP error ) ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;     
-            :} | 
-            Parentesis_izq error:s EXP Parentesis_der {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ ( error EXP ) ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;     
-            :} | 
-            Parentesis_izq error:s Parentesis_der {: 
-                Main.arbolSin.add("( "+(sright+1)+" ) ------> EXP ::= [ EXP ( error ) ]\n");
-                Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error sintáctico - e007 - Expresión inválida -> "); 
-                Main.error = true;     
-            :}
-;
-
 
 /* ------------------------------------ // INSTANCIACIÓN // --------------------------------------------------*/
 
@@ -1620,9 +1873,4 @@ OBJ_PARAMETROS ::=
 
 
             
-           //  if ((a.equals("Numero_Entero")&&(s.equals("Numero_Entero")))){
-  //   Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - tal mal joven -> "); 
-   //     Main.error = true;  
-//}
-//||opc2.equals("enjabonarcera")||opc2.equals("enjuagar")||opc2.equals("enjuagar2")||opc2.equals("secar")))||(opc.equals("cinta")&& cont==0)||(!opc.equals("cinta"))){
-       
+  
