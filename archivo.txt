@@ -16,8 +16,8 @@ Import tpaquete2.tool;
 
 Bool  abwe = True;
 Bool  aqewb = True;
- k = 89;
-ki = 80;
+# k = 5;
+#ki = 80;
 
 Display 'hola mundo';
 Avanzar(10,10);
@@ -26,12 +26,12 @@ Detener();
 
 
 Camera.On();
-
-
+ki = 40;
+k = 1;
 	
 	If(Camera.IsMove()){
-		dx = 1;
+		k = 1;
 }	
-dx = 4;
-
+ki = 40;
+das = 80.0;
 });

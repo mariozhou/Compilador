@@ -245,7 +245,7 @@ public class Main extends javax.swing.JFrame{
     public static ArrayList<String> listaIdValor = new ArrayList<String>();
     public static ArrayList<String> listaIdTipo = new ArrayList<String>();
     public static ArrayList<Integer> listaIdLinea = new ArrayList<Integer>();
-    
+    public static ArrayList<String> listavalor1 = new ArrayList<String>();  // guarda tipos
     public static ArrayList<String> listaValoresId = new ArrayList<String>();
     public static ArrayList<String> listaLexemas = new ArrayList<String>();
     public static ArrayList<Integer> listaLineaLexemas = new ArrayList<Integer>();
@@ -1999,7 +1999,7 @@ public class Main extends javax.swing.JFrame{
      
     
       public static boolean isNumeric(String cadena) {
-
+         
         boolean resultado;
 
         try {
@@ -2109,7 +2109,7 @@ public class Main extends javax.swing.JFrame{
         return false;
     }
     
-    public static int returnid(String a) {// comprobar id si existen en la tabla de simbolo
+    public static int returnid(String a) {// comprobar id si existen en la tabla de simbolo y retornar el index
         int in=0;
         for (int i = 0; i < listaIdValor.size(); i++) {
             in =i;
@@ -2120,7 +2120,29 @@ public class Main extends javax.swing.JFrame{
         return in;
     }
     
-    public static String removeid(String a){
+   
+    
+    public static String returntipo(String a) {// comprobar id si existen en la tabla de simbolo y retornar el index
+        String in="";
+        for (int i = 0; i < listaIdValor.size(); i++) {
+            
+            if (listaIdValor.get(i).equals(a)) {
+                in =listaIdTipo.get(i);   
+                
+            }
+        }
+        return in;
+    
+    }
+    
+    public static String agregarvalue(String txt){
+        
+        
+        
+        return txt;
+    }
+    
+    public static String removeid(String a){//buscar id repetido y actualizarlo
  
         String x="";
          for(int i=0; i<listaIdValor.size(); i++){ 
@@ -2134,9 +2156,8 @@ public class Main extends javax.swing.JFrame{
                     listaIdLinea.remove(i);
                     listaIdTipo.remove(i);
                     listaValoresId.remove(i);
-                  //  i--;
-                     
-                     
+                 
+                  
                     System.out.println(listaIdValor.size()); 
                     System.out.println(listaIdLinea.size()); 
                     System.out.println(listaIdTipo.size()); 

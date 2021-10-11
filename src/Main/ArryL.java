@@ -15,9 +15,9 @@ class ArryL {
     private String val;
     private String linea;
  
-    public ArryL(String id, String nom, String val,String linea){
+    public ArryL(String id, String tipo, String val,String linea){
         this.id = id;
-        this.tipo  = nom;   
+        this.tipo  = tipo;   
         this.val =val;
         this.linea =linea;
     }
