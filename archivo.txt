@@ -3,44 +3,39 @@ mi_camara.Initialize(Home{
 Import paquete1.clase;
 Import tpaquete2.tool;
 
- Float real = 2.0;
- Float real2 = 2.0;
- Int  int = 4; 
- Int  int2 = 40; 
- Int int3;
- Bool b1 = False; 
- Bool  b2 = True;
- Text txt = '1';
-  Text txt2 = '2';
+ Text as;
+Int k; 
+ Int x = 0; 
+ Float w = 2.0;
+ Bool a = False; 
+  a = True;
+ Int int = 4;
+ For (Int i = 0; i>12; i++){
+		Camera.Move('left',5,270);
+	}
 
- int = int2;
-#ki = 80;
 
 Display 'hola mundo';
 Avanzar(10,10);
 Retroceder(5,20);
 Detener();
-
 Camera.On();
-	#int
-	int = 43 + 2;
-	int2 = 1 + 1;
+ RecordTime(15);
+ If(Camera.IsOn() == 90){
+	Camera.Move('left',5,270);
+	}
 
-	#bool
-	b1 = True;
-	b2 = False;
-	#Float
-	real = 80.0 + 80.0;
-	real2 = 80.0;
+ While(Micro.IsOn()){
+	   
+ }
 
-	#text
-	txt = 'nuevo' +'d';
-	txt2 =  's';
+int = 6+6 + 6.0;
+int = False /  2;
+int = 2.6 - False;
+int = 6 + 4;
 
 	If(Camera.IsMove()){
-		int3 = int + int2;
+		dx = 1;
 }	
- 
-
 
 });
