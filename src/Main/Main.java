@@ -36,7 +36,8 @@ import javax.swing.undo.CannotUndoException;
 
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
-import java.io.File;;
+import java.io.File;import java_cup.parser;
+;
 
 import java_cup.runtime.Symbol;
 import javax.swing.JOptionPane;
@@ -2118,13 +2119,16 @@ public class Main extends javax.swing.JFrame{
                 return in;
             }
         }
+    
         return in;
     }
     
    
-    
+     
+     
     public static String returntipo(String a) {// comprobar id si existen en la tabla de simbolo y retornar el index
         String in="";
+   
         for (int i = 0; i < listaIdValor.size(); i++) {
             
             if (listaIdValor.get(i).equals(a)) {
@@ -2133,6 +2137,7 @@ public class Main extends javax.swing.JFrame{
             }
         }
         return in;
+        
     
     }
     
@@ -2173,6 +2178,8 @@ public class Main extends javax.swing.JFrame{
                                 }
           return x;
     }
+        
+
     
     public String[] acomodar(String[] lista){
         for(int i = 0; i<lista.length; i++){  
@@ -2187,10 +2194,11 @@ public class Main extends javax.swing.JFrame{
             }  
         }
         return lista; 
+        
     } 
     
     public void cambiarTabla(int index){
-        
+            
         int col = 0;
         int row = 0;
         
@@ -2468,6 +2476,7 @@ public class Main extends javax.swing.JFrame{
         arbolSin.clear();
         
         listavalor1.clear();
+        
         /* ------------------------------------------------- */
         
         String txt = "";
