@@ -349,6 +349,8 @@ public class Main extends javax.swing.JFrame{
         jScrollPane6 = new javax.swing.JScrollPane();
         dynamicTable = new javax.swing.JTable();
         comboVariable = new javax.swing.JComboBox<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        MostrarCodInt = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
         menuNuevo = new javax.swing.JMenuItem();
@@ -799,7 +801,7 @@ public class Main extends javax.swing.JFrame{
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, 1175, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1175, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -858,7 +860,7 @@ public class Main extends javax.swing.JFrame{
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 1175, Short.MAX_VALUE)
-                    .addComponent(comboVariable, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(comboVariable, javax.swing.GroupLayout.Alignment.TRAILING, 0, 1175, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -872,6 +874,13 @@ public class Main extends javax.swing.JFrame{
         );
 
         jTabbedPane1.addTab("Tabla Variable", jPanel4);
+
+        MostrarCodInt.setEditable(false);
+        MostrarCodInt.setColumns(20);
+        MostrarCodInt.setRows(5);
+        jScrollPane7.setViewportView(MostrarCodInt);
+
+        jTabbedPane1.addTab("tab4", jScrollPane7);
 
         jSplitPane2.setRightComponent(jTabbedPane1);
 
@@ -1224,7 +1233,7 @@ public class Main extends javax.swing.JFrame{
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
-     
+    
         try {
             cleanTables();
             actionSave();
@@ -1411,28 +1420,6 @@ public class Main extends javax.swing.JFrame{
         jToolBar1.setVisible(!jToolBar1.isVisible());
     }//GEN-LAST:event_menubtnVerBHActionPerformed
 
-    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
-//        cambiarTabla(jComboBox1.getSelectedIndex());
-//        llenarTabla(comboVariable.getSelectedIndex());
-    }//GEN-LAST:event_jTabbedPane1MouseClicked
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        cambiarTabla(jComboBox1.getSelectedIndex());
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void jTabbedPane1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MousePressed
-//        cambiarTabla(jComboBox1.getSelectedIndex());
-//        llenarTabla(comboVariable.getSelectedIndex());
-    }//GEN-LAST:event_jTabbedPane1MousePressed
-
-    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
-
-    }//GEN-LAST:event_jTabbedPane1StateChanged
-
-    private void comboVariableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboVariableActionPerformed
-        llenarTabla(comboVariable.getSelectedIndex());
-    }//GEN-LAST:event_comboVariableActionPerformed
-
     private void txtPane1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPane1KeyReleased
         // TODO add your handling code here:z
     }//GEN-LAST:event_txtPane1KeyReleased
@@ -1446,6 +1433,28 @@ public class Main extends javax.swing.JFrame{
        // c.setLocationRelativeTo(null);
       //  c.setVisible(!c.isVisible());
     }//GEN-LAST:event_menuTFija5ActionPerformed
+
+    private void jTabbedPane1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MousePressed
+        //        cambiarTabla(jComboBox1.getSelectedIndex());
+        //        llenarTabla(comboVariable.getSelectedIndex());
+    }//GEN-LAST:event_jTabbedPane1MousePressed
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        //        cambiarTabla(jComboBox1.getSelectedIndex());
+        //        llenarTabla(comboVariable.getSelectedIndex());
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+
+    }//GEN-LAST:event_jTabbedPane1StateChanged
+
+    private void comboVariableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboVariableActionPerformed
+        llenarTabla(comboVariable.getSelectedIndex());
+    }//GEN-LAST:event_comboVariableActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        cambiarTabla(jComboBox1.getSelectedIndex());
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /* ------------------------ Métodos secundarios---------------------------------------- */ 
 
@@ -1997,7 +2006,11 @@ public class Main extends javax.swing.JFrame{
         }
         
        }
-     
+    
+    public static void insertCodInt(String Cadena){
+       MostrarCodInt.setText("Código Intermedio\nOp|A1|A2|R| \n"+Cadena);
+        
+    }
     
       public static boolean isNumeric(String cadena) {
          
@@ -2672,6 +2685,7 @@ public class Main extends javax.swing.JFrame{
     } 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JTextArea MostrarCodInt;
     private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnCompilar;
     private javax.swing.JButton btnCopiar;
@@ -2715,6 +2729,7 @@ public class Main extends javax.swing.JFrame{
     public javax.swing.JScrollPane jScrollPane3;
     public javax.swing.JScrollPane jScrollPane4;
     public javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator10;
     private javax.swing.JToolBar.Separator jSeparator11;
