@@ -238,8 +238,8 @@ public class Main extends javax.swing.JFrame{
     public static boolean error = false;
     public static int countLineas = 0;
     public static int variableSize = 0;
-     static ArrayList<ArryL> Arr = new ArrayList<ArryL>();
-   
+    static ArrayList<ArryL> Arr = new ArrayList<ArryL>();
+    public static ArrayList<String> mostrarCod = new ArrayList<String>();  // guardar codigo intermedio para mostrar
     public static ArrayList<Integer> listaLineas = new ArrayList<Integer>();
     public static ArrayList<String> listaErrores = new ArrayList<String>();
     public static ArrayList<String> listaCodigo = new ArrayList<String>();
@@ -1242,8 +1242,18 @@ public class Main extends javax.swing.JFrame{
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        mostarCodInt();
     }//GEN-LAST:event_btnCompilarActionPerformed
-
+    
+    public static void mostarCodInt() {
+        String txt="";
+        for (int i = 0; i <mostrarCod.size(); i++) {
+           txt += mostrarCod.get(i);
+        }
+        insertCodInt(txt);
+        mostrarCod.clear();
+    }
+        
     private void btnPegarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPegarActionPerformed
         txtPane1.paste();
     }//GEN-LAST:event_btnPegarActionPerformed
@@ -1341,6 +1351,7 @@ public class Main extends javax.swing.JFrame{
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+        mostarCodInt();
     }//GEN-LAST:event_menubtnCompilarActionPerformed
 
     private void menubtnVerTablasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menubtnVerTablasActionPerformed

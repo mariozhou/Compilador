@@ -17,15 +17,14 @@ Int F = 15 ;
 Int G = 15 ; 
 Camera.On();
 
-  If(int== 9){
+  If(int == 9){
+int = 10000;
 }
  #For (Int i = 0; i>12; i++){Avanzar(10,5);	}
 
+int2= A * B + C * D / F - G;
 
-
- 
-#int2= A * B + C * D / F - G;
-#int = 10000;
+int = 10000;
 
 
 });
