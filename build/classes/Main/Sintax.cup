@@ -35,6 +35,7 @@ parser code
     ArrayList<String> listapila = new ArrayList<String>();  
     ArrayList<String> listacond = new ArrayList<String>();   
     ArrayList<String> mostrarCod = new ArrayList<String>();  // guardar codigo intermedio para mostrar
+    ArrayList<String> listapara = new ArrayList<String>();  // guarda FUNC_PARAMS
 
     ArrayList<String> listaexp = new ArrayList<String>();   
     Stack<String> pila = new Stack(); // pilasemantica
@@ -158,11 +159,14 @@ parser code
                   System.out.println(listapila.get(i));
             }
 
-        if(listapila.size()==1){
-            resTemp +=   "= "+listapila.get(0)+" "+listapila.get(1)+"\n\n";
+        if(listapila.size()==2){
+                  
+            //x=x.replace("@", "");
+
+            resTemp +=   "= "+listapila.get(0).replace("@", "")+" "+listapila.get(1).replace("@", "")+"\n\n";
             System.out.println(resTemp); // imprimir codigo intermedio
-            Main.mostrarCod.add(resTemp);
-           // Main.insertCodInt(resTemp);
+            //Main.mostrarCod.add(resTemp);
+
         }else{
 
         for (String token : listapila) {
@@ -221,7 +225,8 @@ parser code
 
     private boolean cOperador(String token) {
         return token.equals("+") || token.equals("-") || token.equals("*")
-                || token.equals("/") || token.equals(">")|| token.equals("==");
+                || token.equals("/") || token.equals(">")|| token.equals("==")|| token.equals("<")
+                || token.equals("<=")|| token.equals(">=")|| token.equals("!=");
     }
 
    public String coperar(String Izq, String op, String Der) {
@@ -247,6 +252,8 @@ parser code
                 return a+" >= "+b+" "; 
             case "<=":
                 return a+" > "+b+" ";
+            case "!=":
+                return a+" == "+b+" ";
             default:
                 return "false";
         }
@@ -282,7 +289,7 @@ terminal
 non terminal INICIO, STMT_LIST, STMT, DECL, CIERRE, EXP, ENA_PORT, DEC_OBJETO, OBJETO, DECL_TIPO,
              ACT_PORT, OBJ_PARAMETROS, EXP_LIST, FUNC, FUNC_TYPE, FUNC_PARAMS, THIS_FUNC, THIS_FUNC_TYPE, IN_OUT,
              VALUE_IN, VALUE_OUT, IF_STMT, COND, COND_IF, COND_IF_2, IF_FUNC_TYPE, STMT_IF,IMPOR,
-             DECLVA, DECLS, TIPO, FUNC_TYPE_IF, FOR_STMT,While_STMT, COND_FOR_2,EXP_2,VALOR
+             DECLVA, DECLS, TIPO, FUNC_TYPE_IF, FOR_STMT,While_STMT, COND_FOR_2,EXP_2,VALOR,COND_FOR
 ;
 
 //-------------------------------- NO TERMINAL INICIAL ----------------------------------------//
@@ -380,10 +387,18 @@ STMT_LIST ::=
 IMPOR ::=
     Import Identificador:s  {:
         Main.arbolSin.add("( "+(sright+1)+" ) --> IMPOR ::= [ Import "+s+" ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Import "+s+"\n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
    
     Import Identificador:s Punto Identificador:a {:
         Main.arbolSin.add("( "+(sright+1)+" ) --> IMPOR ::= [ Import "+s+" Punto "+a+" PComa ]\n"); 
+        /* codigo intermedio */
+    parser.resultado+="Import "+s+"."+a+"\n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa
 ;
 
@@ -410,6 +425,10 @@ DECLVA ::=
           Main.listaIdTipo.add(b+"");
           Main.listaIdLinea.add((sright+1));
           Main.listaValoresId.add(" ");
+          
+        parser.resultado+="Int "+s+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
         }else{
           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
           Main.error = true; 
@@ -418,28 +437,55 @@ DECLVA ::=
     :}  |
     Text:b Identificador:s PComa{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLVA ::= [  Text "+s+" ]\n");
-        //llenar tablad de simbolo
-        Main.listaIdValor.add(s+"");
-        Main.listaIdTipo.add(b+"");
-        Main.listaIdLinea.add((sright+1));
-        Main.listaValoresId.add(" "); 
+         if(!Main.buscarid(s+"")){ //buscar id repetido
+          //llenar tablad de simbolo
+          Main.listaIdValor.add(s+"");
+          Main.listaIdTipo.add(b+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(" ");
+          
+        parser.resultado+="Text "+s+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
+        }else{
+          Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
+          Main.error = true; 
+        }
         
     :}  |
     Float:b Identificador:s PComa{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLVA ::= [  Float "+s+" ]\n");
-        //llenar tablad de simbolo
-        Main.listaIdValor.add(s+"");
-        Main.listaIdTipo.add(b+"");
-        Main.listaIdLinea.add((sright+1));
-        Main.listaValoresId.add(" "); 
+         if(!Main.buscarid(s+"")){ //buscar id repetido
+          //llenar tablad de simbolo
+          Main.listaIdValor.add(s+"");
+          Main.listaIdTipo.add(b+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(" ");
+          
+        parser.resultado+="Float "+s+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
+        }else{
+          Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
+          Main.error = true; 
+        } 
     :}  |
     Bool:b Identificador:s PComa{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> DECLVA ::= [  Bool "+s+" ]\n");
-        //llenar tablad de simbolo
-        Main.listaIdValor.add(s+"");
-        Main.listaIdTipo.add(b+"");
-        Main.listaIdLinea.add((sright+1));
-        Main.listaValoresId.add(" "); 
+         if(!Main.buscarid(s+"")){ //buscar id repetido
+          //llenar tablad de simbolo
+          Main.listaIdValor.add(s+"");
+          Main.listaIdTipo.add(b+"");
+          Main.listaIdLinea.add((sright+1));
+          Main.listaValoresId.add(" ");
+          
+        parser.resultado+="Bool "+s+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
+        }else{
+          Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
+          Main.error = true; 
+        }
     :} 
 ;
 
@@ -469,6 +515,10 @@ DECLS ::=
           Main.listaIdTipo.add(b+"");
           Main.listaIdLinea.add((sright+1));
           Main.listaValoresId.add(a+"");
+
+        parser.resultado+=b+" "+s+" = "+a+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
         }else{
           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
           Main.error = true; 
@@ -491,6 +541,10 @@ DECLS ::=
           Main.listaIdTipo.add(b+"");
           Main.listaIdLinea.add((sright+1));
           Main.listaValoresId.add(a+"");
+
+        parser.resultado+=b+" "+s+" = "+a+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
         }else{
           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
           Main.error = true; 
@@ -513,6 +567,10 @@ DECLS ::=
           Main.listaIdTipo.add(b+"");
           Main.listaIdLinea.add((sright+1));
           Main.listaValoresId.add(a+"");
+
+        parser.resultado+=b+" "+s+" = "+a+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
         }else{
           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
           Main.error = true; 
@@ -534,6 +592,10 @@ DECLS ::=
           Main.listaIdTipo.add(b+"");
           Main.listaIdLinea.add((sright+1));
           Main.listaValoresId.add(a+"");
+
+        parser.resultado+=b+" "+s+" = "+a+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
         }else{
           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
           Main.error = true; 
@@ -548,6 +610,10 @@ DECLS ::=
           Main.listaIdTipo.add(b+"");
           Main.listaIdLinea.add((sright+1));
           Main.listaValoresId.add(a+"");
+
+        parser.resultado+=b+" "+s+" = "+a+"\n";
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
         }else{
           Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e018 - Variable "+s+" ya declarada  en: " ); 
           Main.error = true; 
@@ -702,14 +768,8 @@ IF_STMT ::=
     If:s COND_IF {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> IF_STMT ::= [ If COND_IF ; ]\n");
         parser.ciclo = "if";
-        String x="";
-        
-          for (int i = 0; i < parser.listacond.size(); i++) {
-                  x+= i+":"+parser.listacond.get(i);
-            }
-        System.out.println("cond:"+x);
-
         System.out.println("5");
+
         parser.resultado+="if ";
         parser.cond();
         parser.label++;
@@ -770,8 +830,8 @@ COND ::=
             parser.listapila.clear();
             parser.listavalor1.clear();    
         }else{
-            Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
-            Main.error = true;      
+            //Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
+            //Main.error = true;      
             parser.listavalor1.clear();
         }            
     :} |
@@ -792,73 +852,76 @@ COND ::=
     EXP Mayor:a EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP > EXP ]\n");
         parser.listacond.add(a+"");
-        parser.listapila.clear();
         if(parser.valorTipo(parser.listavalor1,a+"") ){
             parser.listapila.clear();
             parser.listavalor1.clear();
             
         }else{
-            Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
-            Main.error = true;      
+            //Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
+           //Main.error = true;      
             parser.listapila.clear();
             parser.listavalor1.clear();
         }
     :} |
     EXP Mayor_igual:a EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP >= EXP ]\n");
-        parser.listapila.clear();
+        parser.listacond.add(a+"");
         if(parser.valorTipo(parser.listavalor1,a+"") ){
             parser.listapila.clear();
             parser.listavalor1.clear();
             
         }else{
-            Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
-            Main.error = true;      
+            //Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
+            //Main.error = true;      
             parser.listapila.clear();
             parser.listavalor1.clear();
         }
     :} |
     EXP Menor:a EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP < EXP ]\n");
+        parser.listacond.add(a+"");
         if(parser.valorTipo(parser.listavalor1,a+"") ){
             parser.listavalor1.clear();
             parser.listapila.clear();
             
         }else{
-            Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
-            Main.error = true;      
+            //Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
+            //Main.error = true;      
             parser.listapila.clear();
             parser.listavalor1.clear();
         }
     :} |
     EXP Menor_igual:a EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP <= EXP ]\n");
+        parser.listacond.add(a+"");
         if(parser.valorTipo(parser.listavalor1,a+"") ){
             parser.listapila.clear();
             parser.listavalor1.clear();
             
         }else{
-            Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
-            Main.error = true;      
+           // Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
+           // Main.error = true;      
             parser.listapila.clear();
             parser.listavalor1.clear();
         }
     :} |
     EXP And:a EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP < EXP ]\n");
+        parser.listacond.add(a+"");
         if(parser.valorTipo(parser.listavalor1,a+"") ){
             parser.listavalor1.clear();
             parser.listapila.clear();
             
         }else{
-            Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
-            Main.error = true;      
+           // Main.listaErroresSin.add("> Linea ( "+ (sright+1) +" ) - Error semantico - e021 - Tipos incompatibles para el operador '"+a+"': "); 
+           // Main.error = true;      
             parser.listapila.clear();
             parser.listavalor1.clear();
         }
     :} |
     EXP Or:a EXP:s {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ---> COND ::= [ EXP <= EXP ]\n");
+        parser.listacond.add(a+"");
         if(parser.valorTipo(parser.listavalor1,a+"") ){
             parser.listavalor1.clear();
             parser.listapila.clear();
@@ -1114,24 +1177,57 @@ IF_FUNC_TYPE ::=
 
     Camera:s Punto FUNC_TYPE_IF {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> IF_FUNC_TYPE ::= [ "+s+" Punto FUNC_TYPE_IF  ]\n"); 
+        
     :}  |
-     IsSound Parentesis_izq Parentesis_der:s{: 
+     IsSound Parentesis_izq Parentesis_der:s PComa{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> IF_FUNC_TYPE ::= [ IsSound() ]\n"); 
          parser.listavalor1.add("Bool");    //agregar Tipo a la arraylist
+    /* codigo intermedio */
+    parser.resultado+="IsSound() \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :}  
 ;
 
 /*--------------------------------------           FOR          --------------------------------------------------*/
 FOR_STMT ::=
-    For Parentesis_izq Int:b Identificador:s Asignacion Numero_Entero:a {:
-        Main.arbolSin.add("( "+(sright+1)+" ) ---> FOR_STMT ::= [ For(TIPO "+s+" = "+a+"; COND ;"+s+" Inc) ]\n");
-        Main.listaIdValor.add(s+"");
-        Main.listaIdTipo.add(b+"");
-        Main.listaIdLinea.add((sright+1));
-        Main.listaValoresId.add(a+""); 
-    :} PComa COND PComa Identificador:c Inc Parentesis_der COND_FOR_2
+    For:s COND_FOR {:
+        Main.arbolSin.add("( "+(sright+1)+" ) ---> FOR_STMT ::= [ For ]\n");
+
+        String x="";
+          for (int i = 0; i < parser.listacond.size(); i++) {
+                  x+= i+":"+parser.listacond.get(i);
+            }
+        System.out.println("cond:"+x);
+
+        parser.label++;
+        parser.resultado+="= 0 i \n";
+        parser.resultado+="L"+parser.label+": if ";
+        parser.cond();
+        parser.label++;
+        parser.resultado+="GOTO L"+parser.label+"\n";
+        parser.resultado+="suma i 1 i \n";
+        parser.resultado+=parser.resTemp;   //lo que ejecuta si es true
+        parser.resTemp="";
+        parser.label--;
+        parser.resultado+="GOTO L"+parser.label+"\n";
+        parser.label++;
+        parser.resultado+="L"+parser.label+":\n\n";    
+        Main.mostrarCod.add(parser.resultado);
+        parser.resultado="";
+System.out.println("for5");
+    :}  
 ;
 
+COND_FOR ::=  
+    Parentesis_izq Int:b Identificador:s Asignacion Numero_Entero:a PComa COND {:
+    Main.listaIdValor.add(s+"");
+    Main.listaIdTipo.add(b+"");
+    Main.listaIdLinea.add((sright+1));
+    Main.listaValoresId.add(a+""); 
+
+    :}PComa Identificador:c Inc Parentesis_der COND_FOR_2 
+;
 
 COND_FOR_2 ::=
     Llave_izq:s STMT_IF {: 
@@ -1179,6 +1275,11 @@ FUNC_TYPE_IF ::=
 IN_OUT ::=
     Display:s VALUE_OUT  {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> IN_OUT ::= [ Display VALUE PComa ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Display("+parser.listapara.get(0)+") \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
+    parser.listapara.clear();
     :} PComa |
     Receive:s Parentesis_izq VALUE_IN Parentesis_der {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> IN_OUT ::= [ Recive VALUE PComa ]\n"); 
@@ -1193,12 +1294,15 @@ IN_OUT ::=
 VALUE_OUT ::=
     Identificador:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> VALUE ::= [ "+s+" ]\n"); 
+        parser.listapara.add(s+"");
     :} |
     Numero_Entero:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> VALUE ::= [ "+s+" ]\n"); 
+        parser.listapara.add(s+"");
     :} |
     Cadena:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> VALUE ::= [ "+s+" ]\n"); 
+        parser.listapara.add(s+"");
     :} |
     error:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> VALUE ::= [ error ]\n"); 
@@ -1230,10 +1334,15 @@ VALUE_IN ::=
 FUNC ::=
     RecordTime Parentesis_izq Numero_Entero:s Parentesis_der {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ RecordTime("+s+"); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="RecordTime("+s+") \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
 
     Micro:s Punto FUNC_TYPE {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ "+s+" Punto FUNC_TYPE  ]\n"); 
+
     :}  |
 
     Camera:s Punto FUNC_TYPE {: 
@@ -1242,26 +1351,46 @@ FUNC ::=
 
     Capture Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Capture(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Capture() \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
 
     Whistle Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Whistle(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Whistle() \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
 
     IsSound Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ IsSound(); ]\n"); 
+    /* codigo intermedio */
+    parser.resTemp+="IsSound() \n";
     :} PComa |
 
     Detener Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Detener(); ]\n"); 
+    /* codigo intermedio */
+    parser.resTemp+="Detener() \n";
     :} PComa   |
 
-    Avanzar Parentesis_izq FUNC_PARAMS Parentesis_der:s {: 
-        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Avanzar(FUNC_PARAMS); ]\n"); 
+    Avanzar Parentesis_izq FUNC_PARAMS:s Parentesis_der {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Avanzar(FUNC_PARAMS); ]\n");
+    /* codigo intermedio */
+ 
+    parser.resTemp+="Avanzar("+parser.listapara.get(0)+","+parser.listapara.get(1)+") \n";
+    parser.listapara.clear();
+
     :} PComa |
 
-    Retroceder Parentesis_izq FUNC_PARAMS Parentesis_der:s {: 
+    Retroceder Parentesis_izq FUNC_PARAMS:s Parentesis_der {: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC ::= [ Retroceder(FUNC_PARAMS); ]\n"); 
+    /* codigo intermedio */
+    parser.resTemp+="Retroceder("+parser.listapara.get(0)+","+parser.listapara.get(1)+") \n";
+    parser.listapara.clear();
     :} PComa |
 
     Punto error:s {: 
@@ -1277,24 +1406,44 @@ FUNC_TYPE ::=
 
     IsOn Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsOn(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="IsOn() \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
 
     IsMove Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ IsMove(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="IsMove() \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
 
 
-/*--------------------------------------------------------------------------*/
+/*----------------------------- funciones ---------------------------------------------*/
   
     On Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ On(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Camera.On \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado=""; 
     :} PComa |
     Off Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ off(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Camera.Off \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado=""; 
     :} PComa |
 
     Record Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ Record(); ]\n"); 
+    /* codigo intermedio */
+    parser.resultado+="Record() \n";
+    Main.mostrarCod.add(parser.resultado);
+    parser.resultado="";
     :} PComa |
     StopRec Parentesis_izq Parentesis_der:s{: 
         Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_TYPE ::= [ StopRec(); ]\n"); 
@@ -1313,12 +1462,18 @@ FUNC_TYPE ::=
 ;
 
 FUNC_PARAMS ::=
-    Numero_Entero:s Coma Numero_Entero:a{: 
-        Main.arbolSin.add("( "+(aright+1)+" ) ----> FUNC_PARAMS ::= [ "+s+","+a+" ]\n"); 
+    Numero_Entero:s Coma Numero_Entero:b {: 
+        Main.arbolSin.add("( "+(sright+1)+" ) ----> FUNC_PARAMS ::= [ "+s+","+b+" ]\n"); 
+         System.out.println("sright:"+sright);
+        parser.listapara.add(s+"");
+        parser.listapara.add(b+"");
     :} |
-
+    
     Cadena:a Coma Numero_Entero:b Coma Numero_Entero:c{: 
         Main.arbolSin.add("( "+(aright+1)+" ) ----> FUNC_PARAMS ::= [ "+a+", "+b+", "+c+" ]\n"); 
+        parser.listapara.add(a+"");
+        parser.listapara.add(b+"");
+        parser.listapara.add(c+"");
     :} |
 
     Cadena:s Coma THIS_FUNC {: 

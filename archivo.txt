@@ -4,27 +4,28 @@ mi_camara.Initialize(Camera{
  Import paquete2.tool;
 
  Text txt;
- Int int = 15 ; 
+ Int grado ; 
+ Int temperatura ;
  Int int2 = 0; 
  Float real = 2.0;
  Bool bool = False; 
-Int A = 15 ; 
-Int B = 15 ; 
 
-Int C = 15 ; 
-Int D = 15 ; 
-Int F = 15 ; 
-Int G = 15 ; 
-Camera.On();
+ Camera.On();
 
-  If(int == 9){
-int = 10000;
-}
- #For (Int i = 0; i>12; i++){Avanzar(10,5);	}
+ For (Int i = 0; i < 12; i++){	
+		Avanzar(10,5);
+	}
 
-int2= A * B + C * D / F - G;
+	If(i>7){
+	grado = 50;
+	Retroceder(10,5);
 
-int = 10000;
-
+	}
+	temperatura = grado +50;
+	Detener();
+	RecordTime(15);
+	 Display 'Camera encedida';
+	 Display temperatura;
+	Camera.Off();
 
 });

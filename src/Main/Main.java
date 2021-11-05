@@ -880,7 +880,7 @@ public class Main extends javax.swing.JFrame{
         MostrarCodInt.setRows(5);
         jScrollPane7.setViewportView(MostrarCodInt);
 
-        jTabbedPane1.addTab("tab4", jScrollPane7);
+        jTabbedPane1.addTab("Codigo Intermedio", jScrollPane7);
 
         jSplitPane2.setRightComponent(jTabbedPane1);
 
